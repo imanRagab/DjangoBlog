@@ -14,6 +14,7 @@ class Post(models.Model):
     post_content = models.TextField()
     post_category = models.ForeignKey(Category)
     post_picture = models.CharField(max_length=255)
+    post_author = models.CharField(max_length=255, default=None)
 
     def __str__(self):
         return self.post_title
@@ -32,6 +33,7 @@ class Comment(models.Model):
 class Reply(models.Model):
     reply_text = models.TextField()
     reply_comment = models.ForeignKey(Comment)
+    reply_user = models.ForeignKey('auth_app.User', default=None)
 
     def __str__(self):
         return self.reply_text
