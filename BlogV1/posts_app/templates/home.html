@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Landing Page</title>
+</head>
+<body>
+
+    {% block categories_block %}
+
+
+        {%  for category in categories  %}
+
+            <a href="#" class="list-group-item">{{ category.category_name }}</a>
+
+        {%  endfor  %}
+
+
+    {% endblock %}
+</body>
+</html>
