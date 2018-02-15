@@ -7,16 +7,19 @@
 </head>
 <body>
 
-    {% block categories_block %}
+{% block categories_block %}
+<a href="http://127.0.0.1:8000/ourblog/home" class="list-group-item">Home</a>
 
+{% for category in categories %}
 
-        {%  for category in categories  %}
+<a href="http://127.0.0.1:8000/ourblog/home/category/{{ category.id }}" class="list-group-item">{{ category.category_name }}</a>
 
-            <a href="#" class="list-group-item">{{ category.category_name }}</a>
+{% endfor %}
+{% endblock %}
 
-        {%  endfor  %}
+{% block main_block %}
 
-
-    {% endblock %}
+<h3>hamadaaaa</h3>
+{% endblock %}
 </body>
 </html>

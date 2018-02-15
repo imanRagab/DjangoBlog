@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render
 from models import Post, Category, Comment, Tag, Reply, Like, Dislike, Forbidden
 
@@ -23,3 +24,10 @@ def home(request):
     context = {'categories': categories}
 
     return render(request, 'home.html', context)
+
+def category(request, cat_id):
+    categories = Category.objects.all()
+    category = Category.objects.get(id = cat_id)
+    context = {'category': category , 'categories': categories}
+    # return HttpResponse(category)
+    return render(request, 'category.html', context)
