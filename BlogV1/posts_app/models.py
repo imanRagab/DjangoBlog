@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from django.apps import apps
 #User = apps.get_model('auth_app', 'User')
 
@@ -15,6 +16,8 @@ class Post(models.Model):
     post_category = models.ForeignKey(Category)
     post_picture = models.CharField(max_length=255)
     post_author = models.CharField(max_length=255, default=None)
+    post_created_at = models.DateTimeField(auto_now_add=True, blank=True)
+    #DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.post_title
@@ -23,8 +26,9 @@ class Post(models.Model):
 
 class Comment(models.Model):
     comment_text = models.TextField()
-    comment_user = models.ForeignKey('auth_app.User', default=None)
+    comment_user = models.ForeignKey('auth_app.User', blank=True)
     comment_post = models.ForeignKey(Post)
+    comment_created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.comment_text
@@ -34,6 +38,7 @@ class Reply(models.Model):
     reply_text = models.TextField()
     reply_comment = models.ForeignKey(Comment)
     reply_user = models.ForeignKey('auth_app.User', default=None)
+    reply_created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.reply_text
