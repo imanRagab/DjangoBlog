@@ -71,4 +71,4 @@ class CategorySubscribtion(models.Model):
         return self.subscribed_user.username + " has subscribed to " + self.subscribed_category.category_name
 
 class Forbidden(models.Model):
-    pass
+    word = models.CharField(max_length=255)

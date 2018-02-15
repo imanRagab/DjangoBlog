@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from models import Post, Category, Comment, Tag, Reply, LikesDislikes
+from models import Post, Category, Comment, Tag, Reply, LikesDislikes, Forbidden
 
 # Create your views here.
 
