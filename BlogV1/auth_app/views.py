@@ -1,7 +1,7 @@
 
 from django.contrib.auth import (authenticate,login)
 from django.shortcuts import render
-from .forms import UserLoginForm , UserRegisterForm
+from .forms import UserLoginForm
 
 def login_view(request):
     print (request.User.is_authenticated())
@@ -12,18 +12,10 @@ def login_view(request):
         password=form.cleaned_data.get("password")
         User=authenticate(username=username,password=password)
         login(request,User)
-        print (request.User.is_authenticated())
+    print (request.User.is_authenticated())
 
 
-     return render(request , "form.html", {"form":form,"title":title})
+    return render(request , "form.html", {"form":form,"title":title})
 
 
-def register_view(request):
-    title="Register"
-    form=UserRegisterForm(request.POST or None)
-    context={
-        "form":form,
-        "title":title
-    }
-    return render(request,"form.html" ,{})
 
