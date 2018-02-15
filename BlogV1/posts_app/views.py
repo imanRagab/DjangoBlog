@@ -17,3 +17,9 @@ def post(request, post_id):
 
     context = {'post': post, 'categories': categories, 'comments':comments, 'replies':comments_replies}
     return render(request, 'post.html', context)
+
+def home(request):
+    categories = Category.objects.all()
+    context = {'categories': categories}
+
+    return render(request, 'home.html', context)
