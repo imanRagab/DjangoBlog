@@ -8,9 +8,9 @@ class CommentForm(forms.ModelForm):
         fields = ['comment_text']
         widgets = {
             'comment_text': forms.Textarea(attrs={
-                'name': 'comment-text',
+                'id': 'comment-text',
                 'required': True,
-                'placeholder': 'Make your words positive...',
+                'placeholder': 'Leave positive words...',
                 'class': "form-control"
             }),
         }
@@ -21,8 +21,8 @@ class ReplyForm(forms.ModelForm):
 
         fields = ['reply_text']
         widgets = {
-            'reply_text': forms.Textarea(attrs={
-                'name': 'reply-text',
+            'reply_text': forms.TextInput(attrs={
+                'id': 'reply-text',
                 'required': True,
                 'placeholder': 'Make your words positive...',
                 'class': "form-control",
