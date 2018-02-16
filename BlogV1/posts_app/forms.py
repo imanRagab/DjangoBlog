@@ -6,8 +6,6 @@ User=get_user_model()
 
 # class UserLoginForm(forms.Form):
 #
-#
-#
 #     def clean(self, *args,**kwargs):
 #         username=self.cleaned_data.get("username")
 #         password=self.cleaned_data.get("password")

@@ -2,13 +2,15 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from models import Post, Category, Comment, Tag, Reply
 from django.contrib.auth.models import User
+from .forms import  UserRegForm
 from django.contrib.auth import authenticate,login
 from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from models import Post, Category, Comment, Tag, Reply, Like, Dislike, Forbidden
 from forms import ReplyForm, CommentForm
 
-# Create your views here.
+
+##########################################
 
 def post(request, post_id):
     comment_form = CommentForm()
@@ -17,21 +19,22 @@ def post(request, post_id):
     tags = Tag.objects.filter(tag_posts__id = post_id)
     categories = Category.objects.all()
     comments = Comment.objects.filter(comment_post__id = post_id)
-
+    reg_form = UserRegForm()
     comments_replies = []
 
     for comment in comments:
         replies = Reply.objects.filter(reply_comment__id = comment.id)
         comments_replies.append(replies)
     context = {'post': post, 'categories': categories,
-               'comments':comments,
-               'replies':comments_replies,
-               'tags':tags,
-               'comment_form':comment_form,
-               'reply_form':reply_form,}
+     'comments': comments, 'replies': comments_replies,
+     'comment_form': comment_form,
+     'reply_form': reply_form,
+     'tags': tags,}
 
     return render(request, 'post.html', context)
 
+
+###########################################
 
 def register_view(request):
     title="Register"
@@ -49,6 +52,7 @@ def register_view(request):
     return render(request, 'register.html', context)
 
 
+############################################
 
 def login_view(request):
 
@@ -58,11 +62,13 @@ def login_view(request):
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request,user)
-            return HttpResponse("logged in")
+            return render(request, 'home.html')
         else :
-            return HttpResponse("you don`t exsit")
+            return render(request, 'login.html')
 
-    return render(request , "login.html")
+    return render(request , 'login.html')
+
+#################################################
 
 @login_required
 def logged_in_only(request):
@@ -75,11 +81,16 @@ def logged_in_only(request):
 
     return render(request, 'post.html', context)
 
+#################################################
+
 def home(request):
     categories = Category.objects.all()
     context = {'categories': categories}
 
     return render(request, 'home.html', context)
+
+
+################################################
 
 def category(request, cat_id):
     categories = Category.objects.all()
@@ -94,6 +105,7 @@ def category(request, cat_id):
 
     return render(request, 'category.html', context)
 
+#################################################
 
 def comment_reply(request):
     if request.method == 'GET':
@@ -107,4 +119,19 @@ def comment_reply(request):
     else:
         return HttpResponse("Request method is not a GET")
 
+
+#################################################
+
+
+def post_comment(request):
+    if request.method == 'GET':
+        post_id = request.GET['post_id']
+        post = Post.objects.get(pk=post_id)
+        text = request.GET['comment_text']
+        print text
+        comment = Comment(comment_post=post, comment_text=text, comment_user=request.user)
+        comment.save()
+        return HttpResponse("Success!")
+    else:
+        return HttpResponse("Request method is not a GET")
 

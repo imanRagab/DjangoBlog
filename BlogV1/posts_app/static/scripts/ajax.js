@@ -110,24 +110,17 @@ $(function(){
 
     /////////////////////////////////////
 
-    $("#commentForm").submit(function(){
-
+    $("#loginForm").submit(function(){
 
         $.ajax({
 
-            type: $("#commentForm").attr("method"),
-            url: $("#commentForm").attr("action"),
-            data: $("#commentForm").serialize(),
+            type: $("#loginForm").attr("method"),
+            url: $("#loginForm").attr("action"),
+            data: $("#loginForm").serialize(),
             success: function(resp){
-                alert(resp);
+
             }
-
-
-
         });
-
-
-
     });
 
 
