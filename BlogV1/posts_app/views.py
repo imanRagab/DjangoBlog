@@ -63,6 +63,7 @@ def login_view(request):
 @login_required
 def logged_in_only(request):
     return HttpResponse("you are authenticated")
+
     context = {'post': post, 'categories': categories,
                'comments':comments, 'replies':comments_replies,
                'comment_form':comment_form,
