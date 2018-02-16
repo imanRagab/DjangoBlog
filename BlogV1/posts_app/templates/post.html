@@ -141,7 +141,7 @@
 
                       <!-- Modal body -->
                       <div class="modal-body">
-                         <form method="post">{% csrf_token %}
+                         <form method="get" id="commentForm" action="/ourblog/postcomment">{% csrf_token %}
 
                             {{comment_form}}<br>
 
@@ -169,7 +169,7 @@
 
                       <!-- Modal body -->
                       <div class="modal-body">
-                         <form method="post">{% csrf_token %}
+                         <form method="get" id="replyForm" action="/ourblog/commentreply">{% csrf_token %}
 
                             {{reply_form}}<br>
 

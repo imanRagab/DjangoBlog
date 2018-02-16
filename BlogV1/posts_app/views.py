@@ -37,8 +37,14 @@ def category(request, cat_id):
     categories = Category.objects.all()
     category = Category.objects.get(id = cat_id)
     context = {'category': category , 'categories': categories}
-    # return HttpResponse(category)
+    cat_posts = Post.objects.filter(post_category__id=cat_id)
+
+    # cat_post = map(lambda x : x, cat_posts)
+
+    context = {'category': category, 'categories': categories, 'cat_posts': cat_posts}
+
     return render(request, 'category.html', context)
+
 
 def comment_reply(request):
     if request.method == 'GET':
@@ -51,11 +57,4 @@ def comment_reply(request):
         return HttpResponse("Success!")
     else:
         return HttpResponse("Request method is not a GET")
-    cat_posts = Post.objects.filter(post_category__id = cat_id)
-
-    #cat_post = map(lambda x : x, cat_posts)
-
-    context = {'category': category, 'categories': categories, 'cat_posts':cat_posts }
-
-    return render(request, 'category.html', context)
 

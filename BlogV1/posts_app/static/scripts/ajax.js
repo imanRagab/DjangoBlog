@@ -110,6 +110,30 @@ $(function(){
 
     /////////////////////////////////////
 
+    $("#commentForm").submit(function(){
+
+
+        $.ajax({
+
+            type: $("#commentForm").attr("method"),
+            url: $("#commentForm").attr("action"),
+            data: $("#commentForm").serialize(),
+            success: function(resp){
+                alert(resp);
+            }
+
+
+
+        });
+
+
+
+    });
+
+
+
+    /////////////////////////////////////
+
     $("#subs").click(function(){
 
         if($(this).html() == "Subscribe")
