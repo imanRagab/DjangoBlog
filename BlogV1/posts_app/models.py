@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.apps import apps
-#User = apps.get_model('auth_app', 'User')
+from django.contrib.auth.models import User
 
 class Category(models.Model):
     category_name = models.CharField(max_length=255)
@@ -26,7 +26,7 @@ class Post(models.Model):
 
 class Comment(models.Model):
     comment_text = models.TextField()
-    comment_user = models.ForeignKey('auth_app.User', blank=True)
+    comment_user = models.ForeignKey(User, blank=True)
     comment_post = models.ForeignKey(Post)
     comment_created_at = models.DateTimeField(default=timezone.now)
 
@@ -37,7 +37,7 @@ class Comment(models.Model):
 class Reply(models.Model):
     reply_text = models.TextField()
     reply_comment = models.ForeignKey(Comment)
-    reply_user = models.ForeignKey('auth_app.User', default=None)
+    reply_user = models.ForeignKey(User, default=None)
     reply_created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
@@ -53,7 +53,7 @@ class Tag(models.Model):
 
 
 class LikesDislikes(models.Model):
-    likes_dislikes_user = models.ForeignKey('auth_app.User', default=None)
+    likes_dislikes_user = models.ForeignKey(User, default=None)
     likes_dislikes_post = models.ForeignKey(Post)
     type = models.IntegerField(choices=((1, 'like'), (0, 'dislike'))) #1 for like 0 for dislike
 
@@ -65,7 +65,7 @@ class LikesDislikes(models.Model):
 
 class CategorySubscribtion(models.Model):
     subscribed_category = models.ForeignKey(Category)
-    subscribed_user = models.ForeignKey('auth_app.User', default=None)
+    subscribed_user = models.ForeignKey(User, default=None)
 
     def __str__(self):
         return self.subscribed_user.username + " has subscribed to " + self.subscribed_category.category_name
