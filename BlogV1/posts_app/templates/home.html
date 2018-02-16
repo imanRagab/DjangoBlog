@@ -6,15 +6,10 @@
     <title>Landing Page</title>
 </head>
 <body>
-
 {% block categories_block %}
-<a href="http://127.0.0.1:8000/ourblog/home" class="list-group-item">Home</a>
 
-{% for category in categories %}
+{% include "cats_all.html" %}
 
-<a href="http://127.0.0.1:8000/ourblog/home/category/{{ category.id }}" class="list-group-item">{{ category.category_name }}</a>
-
-{% endfor %}
 {% endblock %}
 
 {% block main_block %}

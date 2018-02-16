@@ -4,7 +4,6 @@ from models import Post, Category, Comment, Tag, Reply, Like, Dislike, Forbidden
 
 # Create your views here.
 
-
 def post(request, post_id):
     post = Post.objects.get(id = post_id)
     categories = Category.objects.all()
@@ -28,6 +27,10 @@ def home(request):
 def category(request, cat_id):
     categories = Category.objects.all()
     category = Category.objects.get(id = cat_id)
-    context = {'category': category , 'categories': categories}
-    # return HttpResponse(category)
+    cat_posts = Post.objects.filter(post_category__id = cat_id)
+
+    #cat_post = map(lambda x : x, cat_posts)
+
+    context = {'category': category, 'categories': categories, 'cat_posts':cat_posts }
+
     return render(request, 'category.html', context)
