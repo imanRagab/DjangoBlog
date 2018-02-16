@@ -8,65 +8,6 @@
 
     <body>
 
-    {% block reg_form %}
-    <!-- Registeration Modal -->
-    <div class="modal fade" id="myModal2">
-      <div class="modal-dialog">
-        <div class="modal-content">
-
-          <!-- Modal Header -->
-          <div class="modal-header">
-            <h4 class="modal-title text-center">Registration</h4>
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-          </div>
-
-          <!-- Modal body -->
-          <div class="modal-body">
-             <form action="ourblog/register">
-
-                 {{reg_form}}
-
-                </form>
-          </div>
-        </div>
-     </div>
-     </div>
-    {% endblock %}
-
-        <!--{% block login_icon %}-->
-
-            <!--{% if user.is_authenticated %}-->
-
-                <!--<a class="nav-link" href="#">Logout</a>-->
-
-            <!--{% else %}-->
-
-                <!--<a class="nav-link" href="#"  data-toggle="modal" data-target="#myModal1">Login</a>-->
-
-            <!--{% endif %}-->
-
-        <!--{% endblock %}-->
-
-
-        <!--{% block register_icon %}-->
-
-            <!--{% if user.is_authenticated %}-->
-
-            <!--{% else %}-->
-
-                <!--<a class="nav-link" href="#" data-toggle="modal" data-target="#myModal2" >Registration</a>-->
-
-            <!--{% endif %}-->
-
-            <!--{% if user.is_superuser %}-->
-
-                <!--<a class="nav-link" href="#">Admin Panel</a>-->
-
-            <!--{% endif %}-->
-
-        <!--{% endblock %}-->
-
-
         {% block categories_block %}
 
 
