@@ -1,7 +1,12 @@
 from django.db import models
 from django.utils import timezone
+<<<<<<< HEAD
 from django.apps import apps
 from django.contrib.auth.models import User
+=======
+from django.contrib.auth.models import User
+
+>>>>>>> 6c0b409662539de75c6db5e675415933f19e09ed
 
 class Category(models.Model):
     category_name = models.CharField(max_length=255)
@@ -17,7 +22,6 @@ class Post(models.Model):
     post_picture = models.CharField(max_length=255)
     post_author = models.CharField(max_length=255, default=None)
     post_created_at = models.DateTimeField(auto_now_add=True, blank=True)
-    #DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.post_title
@@ -52,16 +56,26 @@ class Tag(models.Model):
         return self.tag_name
 
 
+<<<<<<< HEAD
 class LikesDislikes(models.Model):
     likes_dislikes_user = models.ForeignKey(User, default=None)
     likes_dislikes_post = models.ForeignKey(Post)
     type = models.IntegerField(choices=((1, 'like'), (0, 'dislike'))) #1 for like 0 for dislike
+=======
+class Like(models.Model):
+    like_user = models.ForeignKey(User, default=None)
+    like_post = models.ForeignKey(Post)
+>>>>>>> 6c0b409662539de75c6db5e675415933f19e09ed
 
     def __str__(self):
-        if self.type == 1:
-            return self.likes_dislikes_user.username + " likes " + self.likes_dislikes_post.post_title
-        else:
-            return self.likes_dislikes_user.username + " dislikes " + self.likes_dislikes_post.post_title
+        return self.like_user.username + " likes " + self.like_post.post_title
+
+class Dislike(models.Model):
+    dislike_user = models.ForeignKey(User, default=None)
+    dislike_post = models.ForeignKey(Post)
+
+    def __str__(self):
+        return self.dislike_user.username + " dislikes " + self.dislike_post.post_title
 
 class CategorySubscribtion(models.Model):
     subscribed_category = models.ForeignKey(Category)
@@ -69,3 +83,6 @@ class CategorySubscribtion(models.Model):
 
     def __str__(self):
         return self.subscribed_user.username + " has subscribed to " + self.subscribed_category.category_name
+
+class Forbidden(models.Model):
+    word = models.CharField(max_length=255)

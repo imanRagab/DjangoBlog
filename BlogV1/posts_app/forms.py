@@ -1,4 +1,5 @@
 from django import forms
+<<<<<<< HEAD
 from django.contrib.auth import authenticate,get_user_model ,login
 
 
@@ -48,3 +49,35 @@ class UserRegForm(forms.ModelForm):
             raise forms.ValidationError("Password must match")
 
         return password
+=======
+from models import Comment, Reply
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+
+        fields = ['comment_text']
+        widgets = {
+            'comment_text': forms.Textarea(attrs={
+                'id': 'comment-text',
+                'required': True,
+                'placeholder': 'Leave positive words...',
+                'class': "form-control"
+            }),
+        }
+
+class ReplyForm(forms.ModelForm):
+    class Meta:
+        model = Reply
+
+        fields = ['reply_text']
+        widgets = {
+            'reply_text': forms.TextInput(attrs={
+                'id': 'reply-text',
+                'required': True,
+                'placeholder': 'Make your words positive...',
+                'class': "form-control",
+            }),
+        }
+
+>>>>>>> 6c0b409662539de75c6db5e675415933f19e09ed

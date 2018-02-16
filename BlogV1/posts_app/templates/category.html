@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Category</title>
+</head>
+<body>
+
+
+    {% block categories_block %}
+        {% include "cats_all.html" %}
+            {% endblock %}
+
+       {% block main_block %}
+
+    <div class="row">
+
+        <h1 class="col-4 header">{{ category.category_name }} </h1> <button class="float-right col-2 offset-6 btn btn-primary" id="subs">Subscribe</button>
+   </div>
+        {% for post in cat_posts %}
+
+            <h3>{{ post.post_content }}</h3>
+
+        {% endfor %}
+
+
+
+
+        {% endblock %}
+</body>
+</html>
+
