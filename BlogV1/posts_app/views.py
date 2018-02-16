@@ -1,8 +1,10 @@
 from django.http import HttpResponse
 from django.shortcuts import render
-from models import Post, Category, Comment, Tag, Reply, LikesDislikes
+from models import Post, Category, Comment, Tag, Reply
 from django.contrib.auth.models import User
+
 from .forms import  UserRegForm
+
 from django.contrib.auth import authenticate,login
 from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
@@ -80,9 +82,16 @@ def home(request):
 def category(request, cat_id):
     categories = Category.objects.all()
     category = Category.objects.get(id = cat_id)
-    context = {'category': category , 'categories': categories}
+
     # return HttpResponse(category)
+    cat_posts = Post.objects.filter(post_category__id=cat_id)
+
+    # cat_post = map(lambda x : x, cat_posts)
+
+    context = {'category': category, 'categories': categories, 'cat_posts': cat_posts}
+
     return render(request, 'category.html', context)
+
 
 def comment_reply(request):
     if request.method == 'GET':
@@ -95,11 +104,5 @@ def comment_reply(request):
         return HttpResponse("Success!")
     else:
         return HttpResponse("Request method is not a GET")
-    cat_posts = Post.objects.filter(post_category__id = cat_id)
 
-    #cat_post = map(lambda x : x, cat_posts)
-
-    context = {'category': category, 'categories': categories, 'cat_posts':cat_posts }
-
-    return render(request, 'category.html', context)
 

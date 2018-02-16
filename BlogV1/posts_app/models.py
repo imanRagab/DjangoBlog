@@ -1,12 +1,8 @@
 from django.db import models
 from django.utils import timezone
-<<<<<<< HEAD
 from django.apps import apps
 from django.contrib.auth.models import User
-=======
-from django.contrib.auth.models import User
 
->>>>>>> 6c0b409662539de75c6db5e675415933f19e09ed
 
 class Category(models.Model):
     category_name = models.CharField(max_length=255)
@@ -56,16 +52,10 @@ class Tag(models.Model):
         return self.tag_name
 
 
-<<<<<<< HEAD
-class LikesDislikes(models.Model):
-    likes_dislikes_user = models.ForeignKey(User, default=None)
-    likes_dislikes_post = models.ForeignKey(Post)
-    type = models.IntegerField(choices=((1, 'like'), (0, 'dislike'))) #1 for like 0 for dislike
-=======
+
 class Like(models.Model):
     like_user = models.ForeignKey(User, default=None)
     like_post = models.ForeignKey(Post)
->>>>>>> 6c0b409662539de75c6db5e675415933f19e09ed
 
     def __str__(self):
         return self.like_user.username + " likes " + self.like_post.post_title
