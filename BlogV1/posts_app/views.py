@@ -5,7 +5,6 @@ from forms import ReplyForm, CommentForm
 
 # Create your views here.
 
-
 def post(request, post_id):
     comment_form = CommentForm()
     reply_form = ReplyForm()
@@ -52,3 +51,11 @@ def comment_reply(request):
         return HttpResponse("Success!")
     else:
         return HttpResponse("Request method is not a GET")
+    cat_posts = Post.objects.filter(post_category__id = cat_id)
+
+    #cat_post = map(lambda x : x, cat_posts)
+
+    context = {'category': category, 'categories': categories, 'cat_posts':cat_posts }
+
+    return render(request, 'category.html', context)
+
