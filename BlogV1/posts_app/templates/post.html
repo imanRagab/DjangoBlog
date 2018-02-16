@@ -8,6 +8,31 @@
 
     <body>
 
+    {% block reg_form %}
+    <!-- Registeration Modal -->
+    <div class="modal fade" id="myModal2">
+      <div class="modal-dialog">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title text-center">Registration</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+             <form action="ourblog/register">
+
+                 {{reg_form}}
+
+                </form>
+          </div>
+        </div>
+     </div>
+     </div>
+    {% endblock %}
+
         <!--{% block login_icon %}-->
 
             <!--{% if user.is_authenticated %}-->
