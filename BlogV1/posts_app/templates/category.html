@@ -6,22 +6,28 @@
     <title>Category</title>
 </head>
 <body>
-    <h3>Hello From Category page.</h3>
 
 
     {% block categories_block %}
-     <a href="http://127.0.0.1:8000/ourblog/home" class="list-group-item">Home</a>
-
-             {%  for category in categories  %}
-
-            <a href="http://127.0.0.1:8000/ourblog/home/category/{{ category.id }}" class="list-group-item">{{ category.category_name }}</a>
-
-        {%  endfor  %}
+        {% include "cats_all.html" %}
             {% endblock %}
 
        {% block main_block %}
 
-             <h3>{{ category.category_name }} </h3>
+    <div class="row">
+
+        <h1 class="col-4 header">{{ category.category_name }} </h1> <button class="float-right col-2 offset-6 btn btn-primary" id="subs">Subscribe</button>
+   </div>
+        {% for post in cat_posts %}
+
+            <h3>{{ post.post_content }}</h3>
+
+        {% endfor %}
+
+
+
+
         {% endblock %}
 </body>
 </html>
+
