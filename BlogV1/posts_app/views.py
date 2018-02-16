@@ -2,9 +2,6 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from models import Post, Category, Comment, Tag, Reply
 from django.contrib.auth.models import User
-
-from .forms import  UserRegForm
-
 from django.contrib.auth import authenticate,login
 from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
@@ -20,14 +17,19 @@ def post(request, post_id):
     tags = Tag.objects.filter(tag_posts__id = post_id)
     categories = Category.objects.all()
     comments = Comment.objects.filter(comment_post__id = post_id)
-    reg_form = UserRegForm()
 
     comments_replies = []
 
     for comment in comments:
         replies = Reply.objects.filter(reply_comment__id = comment.id)
         comments_replies.append(replies)
-    context = {'post': post, 'categories': categories, 'comments':comments, 'replies':comments_replies, 'reg_form':reg_form}
+    context = {'post': post, 'categories': categories,
+               'comments':comments,
+               'replies':comments_replies,
+               'tags':tags,
+               'comment_form':comment_form,
+               'reply_form':reply_form,}
+
     return render(request, 'post.html', context)
 
 

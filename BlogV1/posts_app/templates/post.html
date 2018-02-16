@@ -85,9 +85,11 @@
                         </div>
 
                     {%  endfor  %}
+
                     {% if user.is_authenticated %}
                         <button class="btn btn-info" data-toggle="modal" data-target="#commentModal">Leave a comment</button>
                     {% endif %}
+
                 </div>
               </div>
               <!-- /.card -->
@@ -153,8 +155,4 @@
 
 
     </body>
-
-
-
-
 </html>

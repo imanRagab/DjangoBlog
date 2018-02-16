@@ -2,8 +2,6 @@ from django import forms
 from models import Comment, Reply
 from django.contrib.auth import authenticate,get_user_model ,login
 
-
-
 User=get_user_model()
 
 # class UserLoginForm(forms.Form):
