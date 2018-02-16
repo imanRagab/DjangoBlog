@@ -14,7 +14,6 @@ def login_view(request):
         login(request,User)
     print (request.User.is_authenticated())
 
-
     return render(request , "form.html", {"form":form,"title":title})
 
 

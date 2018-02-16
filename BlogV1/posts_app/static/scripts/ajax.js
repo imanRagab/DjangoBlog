@@ -27,27 +27,29 @@ $(function(){
     /////////////////////////////////////////
 
 
-    $("#sendReply").click(function(){
+    $("#sendReply").on('click', function(e){
 
+        e.preventDefault()
+        alert("hi")
 
-        $.ajax({
-
-        url: '',
-        type: 'post',
-        data: {},
-        success: function(){
-
-
-
-
-
-        }
-
-
-
-        });
-
-    });
+//        $.ajax({
+//
+//            url: '/ourblog/commentreply',
+//            type: 'get',
+//            data: {
+//
+//                comment_id: $(this).attr("commentId")
+//                reply_text: $("#reply_text").val()
+//
+//                },
+//
+//            success: function(resp){
+//
+//                alert(resp);
+//            }
+//
+//        });
+//    });
 
 
     ///////////////////////////////////////
@@ -61,7 +63,6 @@ $(function(){
         type: 'post',
         data: {
 
-            type: 1,
             post_id: $(this).attr("postId")
 
         },
@@ -90,7 +91,6 @@ $(function(){
         type: 'post',
         data: {
 
-            type: 0,
             post_id: $(this).attr("postId")
 
         },
@@ -106,6 +106,20 @@ $(function(){
 
         });
 
+    });
+
+    /////////////////////////////////////
+
+    $("#subs").click(function(){
+
+        if($(this).html() == "Subscribe")
+            $(this).html("UnSubscribe");
+
+        else
+            $(this).html("Subscribe");
+
+        $(this).toggleClass('btn-primary');
+        $(this).toggleClass('btn-danger');
     });
 
 });
