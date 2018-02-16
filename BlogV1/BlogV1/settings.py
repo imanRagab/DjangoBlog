@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-from BlogV1.db import DATABASES
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -33,7 +32,6 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = (
     'admin_app',
-    'auth_app',
     'posts_app',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -79,16 +77,15 @@ WSGI_APPLICATION = 'BlogV1.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'pythonBlog',
-#         'HOST': 'localhost',
-#         'USER': 'root',
-#         'PASSWORD': '12345'
-#     }
-# }
-# rplaced with db.py file
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'ourBlogdb',
+        'HOST': 'localhost',
+        'USER': 'root',
+        'PASSWORD': '1942'
+    }
+}
 
 
 # Internationalization
