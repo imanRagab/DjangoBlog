@@ -1,6 +1,6 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
-from models import Post, Category, Comment, Tag, Reply, LikesDislikes
+from models import Post, Category, Comment, Tag, Reply ,Like
 from django.contrib.auth.models import User
 from .forms import  UserRegForm
 from django.contrib.auth import authenticate,login
@@ -73,8 +73,8 @@ def logged_in_only(request):
 
 def home(request):
     categories = Category.objects.all()
-    context = {'categories': categories}
-
+    posts_all = Post.objects.all()
+    context = {'categories': categories, 'posts_all': posts_all, 'Post':Post,'Like': Like, 'Dislike': Dislike}
     return render(request, 'home.html', context)
 
 def category(request, cat_id):
@@ -102,4 +102,38 @@ def comment_reply(request):
     context = {'category': category, 'categories': categories, 'cat_posts':cat_posts }
 
     return render(request, 'category.html', context)
+
+
+def like_view(request,post_id):
+    pid=Post.objects.get(id=post_id)
+    Like.objects.create(like_post=pid,like_user=request.user)
+    return JsonResponse({"state":True,"safe":False})
+
+
+def unlike_view(request,post_id):
+    pid=Post.objects.get(id=post_id)
+    Like.objects.filter(like_post=pid,like_user=request.user).delete()
+    return JsonResponse({"state": True, "safe": False})
+
+
+
+def dislike_view(request,post_id):
+    pid=Post.objects.get(id=post_id)
+    Dislike.objects.create(dislike_user=request.user,dislike_post=pid)
+    count = Dislike.objects.all().count()
+    print count
+    if count == 10:
+        Post.objects.get(id=post_id).delete()
+    return JsonResponse({"state": True, "safe": False})
+
+
+
+
+
+def undislike_view(request,post_id):
+    pid=Post.objects.get(id=post_id)
+    Dislike.objects.filter(dislike_user_id=request.user,dislike_post_id=pid).delete()
+    return JsonResponse({"state": True, "safe": False})
+
+
 

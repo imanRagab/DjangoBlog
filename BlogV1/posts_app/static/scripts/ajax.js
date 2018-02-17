@@ -2,35 +2,35 @@ $(function(){
 
     ////////////////////////////////////////////
 
-    $("#sendComment").click(function(){
-
-
-        $.ajax({
-
-        url: '',
-        type: 'post',
-        data: {},
-        success: function(){
-
-
-
-
-
-        }
-
-
-
-        });
-
-    });
+//    $("#sendComment").click(function(){
+//
+//
+//        $.ajax({
+//
+//        url: '',
+//        type: 'post',
+//        data: {},
+//        success: function(){
+//
+//
+//
+//
+//
+//        }
+//
+//
+//
+//        });
+//
+//    });
 
     /////////////////////////////////////////
 
 
-    $("#sendReply").on('click', function(e){
-
-        e.preventDefault()
-        alert("hi")
+//    $("#sendReply").on('click', function(e){
+//
+//        e.preventDefault()
+//        alert("hi")
 
 //        $.ajax({
 //
@@ -57,26 +57,47 @@ $(function(){
     $("#likeBtn").click(function(){
 
 
-        $.ajax({
 
-        url: '/likepost',
-        type: 'post',
-        data: {
+        if($(this).html() == "Like"){
 
-            post_id: $(this).attr("postId")
+         $(this).html("Unlike");
+         thiss=this
+        $("#dislikeBtn").attr("disabled",true)
+         $.ajax({
+            url: 'http://127.0.0.1:8000/ourblog/like/'+$(this).attr("postId")+'/',
+            type: 'get',
+            data: {
+                post_id: $(thiss).attr("postId") },
+            success: function(reponse){
+                    console.log(reponse)
+                    alert("liked")
 
-        },
-        success: function(){
+                    },
+            error: function (error) {
+                alert(error);
+                }
+                });
 
+         } else {
 
+           $(this).html("Like")
+           $("#dislikeBtn").attr("disabled",false)
+            thiss=this
+           $.ajax({
+            url: 'http://127.0.0.1:8000/ourblog/unlike/'+$(this).attr("postId")+'/',
+            type: 'get',
+            data: {
+            post_id: $(thiss).attr("postId") },
+            success: function(reponse){
+                    console.log(reponse)
+                    alert("unliked")
 
-
-
-        }
-
-
-
-        });
+                    },
+            error: function (error) {
+                alert(error);
+                }
+                });
+         }
 
     });
 
@@ -85,43 +106,69 @@ $(function(){
     $("#dislikeBtn").click(function(){
 
 
+      if($(this).html()== "Dislike" ){
+
+       $(this).html("Undislike")
+       $("#likeBtn").attr('disabled',true)
+        thiss=this
         $.ajax({
 
-        url: '/likepost',
-        type: 'post',
+        url: 'http://127.0.0.1:8000/ourblog/dislike/'+$(this).attr("postId")+'/',
+        type: 'get',
         data: {
-
-            post_id: $(this).attr("postId")
-
+            post_id: $(thiss).attr("postId")
         },
-        success: function(){
+        success: function(reponse){
+           console.log(reponse)
+                alert("disliked!")
+        },
+        error: function (error) {
 
-
-
-
-
-        }
-
-
-
+                alert(error);
+                }
         });
 
+ }
+
+else {
+
+             $(this).html("Dislike")
+             $("#likeBtn").attr('disabled',false)
+             thiss=this
+             $.ajax({
+
+                url: 'http://127.0.0.1:8000/ourblog/undislike/'+$(this).attr("postId")+'/',
+                type: 'get',
+                data: {
+                        post_id: $(this).attr("postId")
+                    },
+                success: function(reponse){
+                             console.log(reponse)
+                            alert("un-disliked!")
+                    },
+                error: function (error) {
+                            alert(error);
+                            }
+                    });
+            }
+
+
     });
 
-    /////////////////////////////////////
+//    /////////////////////////////////////
+//
+//    $("#subs").click(function(){
+//
+//        if($(this).html() == "Subscribe")
+//            $(this).html("UnSubscribe");
+//
+//        else
+//            $(this).html("Subscribe");
+//
+//        $(this).toggleClass('btn-primary');
+//        $(this).toggleClass('btn-danger');
+//    });
+//
 
-    $("#subs").click(function(){
-
-        if($(this).html() == "Subscribe")
-            $(this).html("UnSubscribe");
-
-        else
-            $(this).html("Subscribe");
-
-        $(this).toggleClass('btn-primary');
-        $(this).toggleClass('btn-danger');
-    });
 
 });
-
-

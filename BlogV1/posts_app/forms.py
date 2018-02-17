@@ -1,5 +1,4 @@
 from django import forms
-<<<<<<< HEAD
 from django.contrib.auth import authenticate,get_user_model ,login
 
 
@@ -49,7 +48,7 @@ class UserRegForm(forms.ModelForm):
             raise forms.ValidationError("Password must match")
 
         return password
-=======
+
 from models import Comment, Reply
 
 class CommentForm(forms.ModelForm):
@@ -80,4 +79,4 @@ class ReplyForm(forms.ModelForm):
             }),
         }
 
->>>>>>> 6c0b409662539de75c6db5e675415933f19e09ed
+
