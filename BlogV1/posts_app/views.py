@@ -60,9 +60,17 @@ def login_view(request):
 
     return render(request , "login.html")
 
-@login_required
-def logged_in_only(request):
-    return HttpResponse("you are authenticated")
+    if user.is_active:
+        login(request, user)
+        return HttpResponseRedirect("post.html")
+    else:
+        return render(request, "login.html")  # user Not Active
+
+  #  @login_required
+   # def logout(request):
+    #    django_logout(request)
+     #   return HttpResponseRedirect('/deck')
+
 
     context = {'post': post, 'categories': categories,
                'comments':comments, 'replies':comments_replies,
