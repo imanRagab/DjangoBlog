@@ -3,7 +3,7 @@ from django.shortcuts import render
 from models import Post, Category, Comment, Tag, Reply
 from django.contrib.auth.models import User
 from .forms import UserRegForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login , logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from models import Post, Category, Comment, Tag, Reply, Like, Dislike, Forbidden
@@ -116,6 +116,12 @@ def category(request, cat_id):
 def comment_reply(request, post_id, comment_id):
     if request.method == 'GET':
         reply_text = request.GET['reply_text']
+
+        forbidden_words = Forbidden.objects.all()
+
+        for forbidden_word in forbidden_words:
+            reply_text = reply_text.replace(forbidden_word.word, ("*" * len(forbidden_word.word)))
+
         comment = Comment.objects.get(pk=comment_id)
         reply = Reply(reply_comment=comment, reply_text=reply_text, reply_user=request.user)
         reply.save()
@@ -132,6 +138,11 @@ def post_comment(request, post_id):
     if request.method == 'GET':
         post = Post.objects.get(pk=post_id)
         comment_text = request.GET['comment_text']
+        forbidden_words = Forbidden.objects.all()
+
+        for forbidden_word in forbidden_words:
+            comment_text = comment_text.replace(forbidden_word.word, ("*" * len(forbidden_word.word)))
+
         comment = Comment(comment_post=post, comment_text=comment_text, comment_user=request.user)
         comment.save()
 
@@ -154,3 +165,8 @@ def like_post(request):
 
     else:
         return HttpResponse("Request method is not a GET")
+
+######################################################
+def logout_view(request):
+	logout(request)
+	return render(request,'home.html')
