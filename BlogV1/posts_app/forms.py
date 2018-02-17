@@ -34,7 +34,6 @@ class UserRegForm(forms.ModelForm):
             'email',
             'password',
             'cpassword'
-
         ]
 
     def clean_cpassword(self):
@@ -45,6 +44,13 @@ class UserRegForm(forms.ModelForm):
             raise forms.ValidationError("Password must match")
 
         return password
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        username = self.cleaned_data.get('username')
+        if email and User.objects.filter(email=email).exclude(username=username).exists():
+            raise forms.ValidationError('Email addresses must be unique.')
+        return email
 
 
 

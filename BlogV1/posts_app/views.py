@@ -1,9 +1,9 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from models import Post, Category, Comment, Tag, Reply
 from django.contrib.auth.models import User
 from .forms import UserRegForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from models import Post, Category, Comment, Tag, Reply, Like, Dislike, Forbidden
@@ -19,7 +19,8 @@ def post(request, post_id):
     tags = Tag.objects.filter(tag_posts__id=post_id)
     categories = Category.objects.all()
     comments = Comment.objects.filter(comment_post__id=post_id)
-    reg_form = UserRegForm()
+    likes = len(Like.objects.filter(like_post__id=post_id))
+    dislikes = len(Dislike.objects.filter(dislike_post__id=post_id))
     comments_replies = []
 
     for comment in comments:
@@ -29,6 +30,8 @@ def post(request, post_id):
                'comments': comments, 'replies': comments_replies,
                'comment_form': comment_form,
                'reply_form': reply_form,
+               'likes': likes,
+               'dislikes': dislikes,
                'tags': tags, }
 
     return render(request, 'post.html', context)
@@ -44,6 +47,7 @@ def register_view(request):
         password = form.cleaned_data.get('password')
         user.set_password(password)
         user.save()
+        return HttpResponseRedirect('/ourblog/home')
 
     context = {
         "form": form,
@@ -62,28 +66,14 @@ def login_view(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                return render(request, 'home.html')
+                return redirect(request.META['HTTP_REFERER'])
             else:
                 return HttpResponse("Your account has been blocked please contact the admin")
 
         else:
-            return render(request, 'login.html')
+            return redirect(request.META['HTTP_REFERER'])
 
-    return render(request, 'login.html')
-
-
-#################################################
-
-@login_required
-def logged_in_only(request):
-    return HttpResponse("you are authenticated")
-    context = {'post': post, 'categories': categories,
-               'comments': comments, 'replies': comments_replies,
-               'comment_form': comment_form,
-               'reply_form': reply_form,
-               'tags': tags}
-
-    return render(request, 'post.html', context)
+        return redirect(request.META['HTTP_REFERER'])
 
 
 #################################################
@@ -166,4 +156,8 @@ def like_post(request):
     else:
         return HttpResponse("Request method is not a GET")
 
+#################################################
 
+def logout_view(request):
+	logout(request)
+	return redirect(request.META['HTTP_REFERER'])
