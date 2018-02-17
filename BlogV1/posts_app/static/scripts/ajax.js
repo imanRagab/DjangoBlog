@@ -1,78 +1,38 @@
 $(function(){
 
+    var current_comment_id
+
     ////////////////////////////////////////////
 
-    $("#sendComment").click(function(){
-
-
-        $.ajax({
-
-        url: '',
-        type: 'post',
-        data: {},
-        success: function(){
-
-
-
-
-
-        }
-
-
-
-        });
-
-    });
-
-    /////////////////////////////////////////
-
-
-    $("#sendReply").on('click', function(e){
-
-        e.preventDefault()
-        alert("hi")
-
+//    $("#commentForm").submit(function(){
+//
 //        $.ajax({
 //
-//            url: '/ourblog/commentreply',
-//            type: 'get',
-//            data: {
-//
-//                comment_id: $(this).attr("commentId")
-//                reply_text: $("#reply_text").val()
-//
-//                },
-//
+//            type: $("#commentForm").attr("method"),
+//            url: $("#commentForm").attr("action"),
+//            data: {comment_text: $("#comment-text").val()},
 //            success: function(resp){
 //
-//                alert(resp);
 //            }
-//
 //        });
 //    });
 
-
-    ///////////////////////////////////////
+    /////////////////////////////////////////
 
     $("#likeBtn").click(function(){
 
-
         $.ajax({
 
-        url: '/likepost',
-        type: 'post',
-        data: {
+            url: '/ourblog/likepost',
+            type: 'get',
+            data: {
+                post_id: $(this).attr("postId")
+            },
 
-            post_id: $(this).attr("postId")
-
-        },
-        success: function(){
-
+            success: function(resp){
 
 
-
-
-        }
+            }
 
 
 
@@ -110,24 +70,17 @@ $(function(){
 
     /////////////////////////////////////
 
-    $("#commentForm").submit(function(){
-
+    $("#loginForm").submit(function(){
 
         $.ajax({
 
-            type: $("#commentForm").attr("method"),
-            url: $("#commentForm").attr("action"),
-            data: $("#commentForm").serialize(),
+            type: $("#loginForm").attr("method"),
+            url: $("#loginForm").attr("action"),
+            data: $("#loginForm").serialize(),
             success: function(resp){
-                alert(resp);
+
             }
-
-
-
         });
-
-
-
     });
 
 
