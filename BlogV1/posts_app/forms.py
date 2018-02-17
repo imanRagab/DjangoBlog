@@ -62,6 +62,12 @@ class CommentForm(forms.ModelForm):
             }),
         }
 
+        labels = {
+
+            'comment_text': 'Leave a comment',
+
+        }
+
 class ReplyForm(forms.ModelForm):
     class Meta:
         model = Reply
@@ -76,4 +82,8 @@ class ReplyForm(forms.ModelForm):
             }),
         }
 
+        labels = {
+
+            'reply_text': '',
+        }
 

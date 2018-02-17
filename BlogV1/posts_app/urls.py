@@ -11,8 +11,9 @@ urlpatterns = [
     url(r'^post/(?P<post_id>[0-9]+)/$', views.post),
     url(r'^register/$', register_view),
     url(r'^login/$', login_view),
-    url(r'^commentreply/$', views.comment_reply),
-    url(r'^postcomment/$', views.post_comment)
+    url(r'^commentreply/(?P<post_id>[0-9]+)/(?P<comment_id>[0-9]+)', views.comment_reply),
+    url(r'^postcomment/(?P<post_id>[0-9]+)/$', views.post_comment),
+    url(r'^likepost/$', views.like_post)
 
 ]
 

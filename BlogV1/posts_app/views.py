@@ -2,9 +2,9 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from models import Post, Category, Comment, Tag, Reply
 from django.contrib.auth.models import User
-from .forms import  UserRegForm
-from django.contrib.auth import authenticate,login
-from django.http import HttpResponse,HttpResponseRedirect
+from .forms import UserRegForm
+from django.contrib.auth import authenticate, login
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from models import Post, Category, Comment, Tag, Reply, Like, Dislike, Forbidden
 from forms import ReplyForm, CommentForm
@@ -15,21 +15,21 @@ from forms import ReplyForm, CommentForm
 def post(request, post_id):
     comment_form = CommentForm()
     reply_form = ReplyForm()
-    post = Post.objects.get(id = post_id)
-    tags = Tag.objects.filter(tag_posts__id = post_id)
+    post = Post.objects.get(id=post_id)
+    tags = Tag.objects.filter(tag_posts__id=post_id)
     categories = Category.objects.all()
-    comments = Comment.objects.filter(comment_post__id = post_id)
+    comments = Comment.objects.filter(comment_post__id=post_id)
     reg_form = UserRegForm()
     comments_replies = []
 
     for comment in comments:
-        replies = Reply.objects.filter(reply_comment__id = comment.id)
+        replies = Reply.objects.filter(reply_comment__id=comment.id)
         comments_replies.append(replies)
     context = {'post': post, 'categories': categories,
-     'comments': comments, 'replies': comments_replies,
-     'comment_form': comment_form,
-     'reply_form': reply_form,
-     'tags': tags,}
+               'comments': comments, 'replies': comments_replies,
+               'comment_form': comment_form,
+               'reply_form': reply_form,
+               'tags': tags, }
 
     return render(request, 'post.html', context)
 
@@ -37,36 +37,36 @@ def post(request, post_id):
 ###########################################
 
 def register_view(request):
-    title="Register"
+    title = "Register"
     form = UserRegForm(request.POST or None)
     if form.is_valid():
-        user=form.save(commit=False)
+        user = form.save(commit=False)
         password = form.cleaned_data.get('password')
         user.set_password(password)
         user.save()
 
-    context={
-        "form":form,
-        "title":title
-     }
+    context = {
+        "form": form,
+        "title": title
+    }
     return render(request, 'register.html', context)
 
 
 ############################################
 
 def login_view(request):
-
     if request.method == 'POST':
-        username=request.POST['username']
-        password=request.POST['password']
+        username = request.POST['username']
+        password = request.POST['password']
         user = authenticate(username=username, password=password)
         if user is not None:
-            login(request,user)
+            login(request, user)
             return render(request, 'home.html')
-        else :
+        else:
             return render(request, 'login.html')
 
-    return render(request , 'login.html')
+    return render(request, 'login.html')
+
 
 #################################################
 
@@ -74,12 +74,13 @@ def login_view(request):
 def logged_in_only(request):
     return HttpResponse("you are authenticated")
     context = {'post': post, 'categories': categories,
-               'comments':comments, 'replies':comments_replies,
-               'comment_form':comment_form,
-               'reply_form':reply_form,
-               'tags':tags}
+               'comments': comments, 'replies': comments_replies,
+               'comment_form': comment_form,
+               'reply_form': reply_form,
+               'tags': tags}
 
     return render(request, 'post.html', context)
+
 
 #################################################
 
@@ -94,7 +95,7 @@ def home(request):
 
 def category(request, cat_id):
     categories = Category.objects.all()
-    category = Category.objects.get(id = cat_id)
+    category = Category.objects.get(id=cat_id)
 
     # return HttpResponse(category)
     cat_posts = Post.objects.filter(post_category__id=cat_id)
@@ -105,17 +106,17 @@ def category(request, cat_id):
 
     return render(request, 'category.html', context)
 
+
 #################################################
 
-def comment_reply(request):
+def comment_reply(request, post_id, comment_id):
     if request.method == 'GET':
-        comment_id = request.GET['comment_id']
+        reply_text = request.GET['reply_text']
         comment = Comment.objects.get(pk=comment_id)
-        text = request.GET['reply_text']
-        print text
-        reply = Reply(reply_comment=comment, reply_text=text, reply_user=request.user)
+        reply = Reply(reply_comment=comment, reply_text=reply_text, reply_user=request.user)
         reply.save()
-        return HttpResponse("Success!")
+        return HttpResponseRedirect('/ourblog/post/' + post_id)
+
     else:
         return HttpResponse("Request method is not a GET")
 
@@ -123,15 +124,31 @@ def comment_reply(request):
 #################################################
 
 
-def post_comment(request):
+def post_comment(request, post_id):
+    if request.method == 'GET':
+        post = Post.objects.get(pk=post_id)
+        comment_text = request.GET['comment_text']
+        comment = Comment(comment_post=post, comment_text=comment_text, comment_user=request.user)
+        comment.save()
+
+        return HttpResponseRedirect('/ourblog/post/' + post_id)
+
+    else:
+        return HttpResponse("Request method is not a GET")
+
+
+#################################################
+
+def like_post(request):
     if request.method == 'GET':
         post_id = request.GET['post_id']
         post = Post.objects.get(pk=post_id)
-        text = request.GET['comment_text']
-        print text
-        comment = Comment(comment_post=post, comment_text=text, comment_user=request.user)
-        comment.save()
-        return HttpResponse("Success!")
+        like = Like(like_post=post, like_user=request.user)
+        like.save()
+
+        return HttpResponseRedirect('/ourblog/post/' + post_id)
+
     else:
         return HttpResponse("Request method is not a GET")
+
 
