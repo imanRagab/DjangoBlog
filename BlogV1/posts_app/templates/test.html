@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+{% if user.is_authenticated %}
+    {% if Like.objects.get(like_post=Post.objects.get(post.id),like_user=user) %}
+        <button class="btn btn-success btn-sm" id="likeBtn" postId="{{post.id}}">Unlike</button>
+    {% else %}
+        <button class="btn btn-success btn-sm" id="likeBtn" postId="{{post.id}}">Like</button>
+    {% endif %}
+    {% if Dislike.objects.get(like_post=Post.objects.get(post.id),like_user=user) %}
+        <button class="btn btn-danger btn-sm" id="dislikeBtn" postId="{{post.id}}"> Undislike</button>
+    {% else %}
+        <button class="btn btn-danger btn-sm" id="dislikeBtn" postId="{{post.id}}"> Dislike</button>
+    {% endif %}
+{% endif %}
+
+</body>
+</html>

@@ -75,7 +75,7 @@ def logged_in_only(request):
 def home(request):
     categories = Category.objects.all()
     posts_all = Post.objects.all()
-    context = {'categories': categories , 'posts_all':posts_all }
+    context = {'categories': categories , 'posts_all':posts_all , 'Like':Like , 'Dislike':Dislike }
 
     return render(request, 'home.html', context)
 
@@ -84,6 +84,7 @@ def category(request, cat_id):
     category = Category.objects.get(id = cat_id)
     # return HttpResponse(category)
     cat_posts = Post.objects.filter(post_category__id=cat_id)
+
     # cat_post = map(lambda x : x, cat_posts)
     context = {'category': category, 'categories': categories, 'cat_posts': cat_posts}
 
