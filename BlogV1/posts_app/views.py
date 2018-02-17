@@ -60,8 +60,12 @@ def login_view(request):
         password = request.POST['password']
         user = authenticate(username=username, password=password)
         if user is not None:
-            login(request, user)
-            return render(request, 'home.html')
+            if user.is_active:
+                login(request, user)
+                return render(request, 'home.html')
+            else:
+                return HttpResponse("Your account has been blocked please contact the admin")
+
         else:
             return render(request, 'login.html')
 
@@ -112,6 +116,12 @@ def category(request, cat_id):
 def comment_reply(request, post_id, comment_id):
     if request.method == 'GET':
         reply_text = request.GET['reply_text']
+
+        forbidden_words = Forbidden.objects.all()
+
+        for forbidden_word in forbidden_words:
+            reply_text = reply_text.replace(forbidden_word.word, ("*" * len(forbidden_word.word)))
+
         comment = Comment.objects.get(pk=comment_id)
         reply = Reply(reply_comment=comment, reply_text=reply_text, reply_user=request.user)
         reply.save()
@@ -128,6 +138,11 @@ def post_comment(request, post_id):
     if request.method == 'GET':
         post = Post.objects.get(pk=post_id)
         comment_text = request.GET['comment_text']
+        forbidden_words = Forbidden.objects.all()
+
+        for forbidden_word in forbidden_words:
+            comment_text = comment_text.replace(forbidden_word.word, ("*" * len(forbidden_word.word)))
+
         comment = Comment(comment_post=post, comment_text=comment_text, comment_user=request.user)
         comment.save()
 
