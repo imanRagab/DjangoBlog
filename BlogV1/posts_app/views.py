@@ -1,10 +1,9 @@
 from django.http import HttpResponse
 from django.shortcuts import render
-from models import Post, Category, Comment, Tag, Reply
+from models import Post, Category, Comment, Tag, Reply, CategorySubscribtion
 from django.contrib.auth.models import User
-
+from django.http import JsonResponse
 from .forms import  UserRegForm
-
 from django.contrib.auth import authenticate,login
 from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
@@ -75,23 +74,20 @@ def logged_in_only(request):
 
 def home(request):
     categories = Category.objects.all()
-    context = {'categories': categories}
+    posts_all = Post.objects.all()
+    context = {'categories': categories , 'posts_all':posts_all }
 
     return render(request, 'home.html', context)
 
 def category(request, cat_id):
     categories = Category.objects.all()
     category = Category.objects.get(id = cat_id)
-
     # return HttpResponse(category)
     cat_posts = Post.objects.filter(post_category__id=cat_id)
-
     # cat_post = map(lambda x : x, cat_posts)
-
     context = {'category': category, 'categories': categories, 'cat_posts': cat_posts}
 
     return render(request, 'category.html', context)
-
 
 def comment_reply(request):
     if request.method == 'GET':
@@ -104,5 +100,21 @@ def comment_reply(request):
         return HttpResponse("Success!")
     else:
         return HttpResponse("Request method is not a GET")
+
+
+def subscribe(request, cat_id, user_id):
+    new_sub = CategorySubscribtion.objects.create(subscribed_category_id = cat_id,subscribed_user_id = user_id)
+    return JsonResponse({'subs': True}, safe=False)
+
+def unsubscribe(request, cat_id, user_id):
+    un_sub = CategorySubscribtion.objects.get(subscribed_category_id = cat_id,subscribed_user_id = user_id)
+    un_sub.delete()
+    return JsonResponse({'unsubs': True}, safe=False)
+
+
+
+
+
+
 
 

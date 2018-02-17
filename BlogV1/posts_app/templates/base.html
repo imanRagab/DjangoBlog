@@ -30,11 +30,15 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
+              </li>
+              <li class="nav-item active">
+              <input type="text" placeholder="search for product" id="searchUser"/>
+            </li>
             <li class="nav-item active">
               <a class="nav-link" href="/ourblog/home">Home
                 <span class="sr-only">(current)</span>
               </a>
-            </li>
+
             <li class="nav-item">
 
 
@@ -163,5 +167,39 @@
     <script src="{% static 'scripts/jquery.min.js' %}"></script>
     <script src="{% static 'scripts/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'scripts/ajax.js' %}"></script>
+  <script>$(".subs").click(function(){
+
+    cat_id = 1;
+    user_id = 1;
+
+	if( $(this).html() == "Subscribe" )
+	{
+		$(this).html("UnSubscribe");
+		$.ajax({
+        url: 'http://127.0.0.1:8000/ourblog/sup/'+ cat_id + '/' +user_id + '/' ,
+        success: function(){
+            console.log("ana geeeeet");
+        }
+
+    });
+
+	}
+	else
+	{
+		$(this).html("Subscribe");
+		$.ajax({
+        url: 'http://127.0.0.1:8000/ourblog/unsup/'+ cat_id + '/' +user_id + '/' ,
+        success: function(){
+            console.log("ana mageeeeetsh");
+        }
+
+    });
+	}
+
+	$(this).toggleClass('btn-primary');
+	$(this).toggleClass('btn-danger');
+    });
+
+ </script>
   </body>
 </html>
