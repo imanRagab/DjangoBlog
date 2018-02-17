@@ -83,7 +83,7 @@ DATABASES = {
         'NAME': 'pythonBlog',
         'HOST': 'localhost',
         'USER': 'root',
-        'PASSWORD': '12345'
+        'PASSWORD': '123456'
     }
 }
 
