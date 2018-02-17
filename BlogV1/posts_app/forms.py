@@ -57,6 +57,8 @@ class UserRegForm(forms.ModelForm):
             raise forms.ValidationError('Email addresses must be unique.')
         return email
 
+
+
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
