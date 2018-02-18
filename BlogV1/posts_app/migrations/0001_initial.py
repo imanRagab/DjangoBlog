@@ -21,6 +21,14 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='CategorySubscribtion',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('subscribed_category', models.ForeignKey(to='posts_app.Category')),
+                ('subscribed_user', models.ForeignKey(default=None, to=settings.AUTH_USER_MODEL)),
+            ],
+        ),
+        migrations.CreateModel(
             name='Comment',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -70,14 +78,6 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='Subscription',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('subscriped_category', models.ForeignKey(to='posts_app.Category')),
-                ('subscriped_user', models.ForeignKey(default=None, to=settings.AUTH_USER_MODEL)),
-            ],
-        ),
-        migrations.CreateModel(
             name='Tag',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -93,7 +93,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='like',
             name='like_user',
-            field=models.ForeignKey(default=None, to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='dislike',
@@ -103,7 +103,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='dislike',
             name='dislike_user',
-            field=models.ForeignKey(default=None, to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='comment',
