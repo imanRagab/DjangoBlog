@@ -3,4 +3,4 @@
 BlogV1/db.py
 BlogV1/setting.py
 *.pyc
-
+setting.py
