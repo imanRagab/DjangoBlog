@@ -19,8 +19,8 @@ def post(request, post_id):
     tags = Tag.objects.filter(tag_posts__id=post_id)
     categories = Category.objects.all()
     comments = Comment.objects.filter(comment_post__id=post_id)
-    likes = len(Like.objects.filter(like_post__id=post_id))
-    dislikes = len(Dislike.objects.filter(dislike_post__id=post_id))
+    likes = Like.objects.filter(like_post__id=post_id)
+    dislikes = Dislike.objects.filter(dislike_post__id=post_id)
     comments_replies = []
 
     for comment in comments:
@@ -30,8 +30,8 @@ def post(request, post_id):
                'comments': comments, 'replies': comments_replies,
                'comment_form': comment_form,
                'reply_form': reply_form,
-               'likes': likes,
-               'dislikes': dislikes,
+               'likes_count': len(likes),
+               'dislikes_count': len(dislikes),
                'tags': tags, }
 
     return render(request, 'post.html', context)

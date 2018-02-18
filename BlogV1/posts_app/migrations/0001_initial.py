@@ -21,14 +21,6 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='CategorySubscribtion',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('subscribed_category', models.ForeignKey(to='posts_app.Category')),
-                ('subscribed_user', models.ForeignKey(default=None, to=settings.AUTH_USER_MODEL)),
-            ],
-        ),
-        migrations.CreateModel(
             name='Comment',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -75,6 +67,14 @@ class Migration(migrations.Migration):
                 ('reply_created_at', models.DateTimeField(default=django.utils.timezone.now)),
                 ('reply_comment', models.ForeignKey(to='posts_app.Comment')),
                 ('reply_user', models.ForeignKey(default=None, to=settings.AUTH_USER_MODEL)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Subscription',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('subscriped_category', models.ForeignKey(to='posts_app.Category')),
+                ('subscriped_user', models.ForeignKey(default=None, to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
