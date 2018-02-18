@@ -77,3 +77,6 @@ class CategorySubscribtion(models.Model):
 
 class Forbidden(models.Model):
     word = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.word

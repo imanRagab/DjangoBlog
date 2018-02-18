@@ -1,6 +1,5 @@
 $(function(){
 
-    ////////////////////////////////////////////
 
     $("#sendComment").click(function(){
 
@@ -23,41 +22,41 @@ $(function(){
         alert("hi")
 
 //        $.ajax({
+
+    var current_comment_id
+
+    ////////////////////////////////////////////
+
+//    $("#commentForm").submit(function(){
+
 //
-//            url: '/ourblog/commentreply',
-//            type: 'get',
-//            data: {
+//        $.ajax({
 //
-//                comment_id: $(this).attr("commentId")
-//                reply_text: $("#reply_text").val()
-//
-//                },
-//
+//            type: $("#commentForm").attr("method"),
+//            url: $("#commentForm").attr("action"),
+//            data: {comment_text: $("#comment-text").val()},
 //            success: function(resp){
 //
-//                alert(resp);
 //            }
-//
 //        });
     });
 
-
-    ///////////////////////////////////////
+    /////////////////////////////////////////
 
     $("#likeBtn").click(function(){
 
-
         $.ajax({
 
-        url: '/likepost',
-        type: 'post',
-        data: {
+            url: '/ourblog/likepost',
+            type: 'get',
+            data: {
+                post_id: $(this).attr("postId")
+            },
 
-            post_id: $(this).attr("postId")
+            success: function(resp){
 
-        },
-        success: function(){
-        }
+            
+            }
 
         });
 
@@ -87,6 +86,15 @@ $(function(){
 
     /////////////////////////////////////
 
-});
+    $("#loginForm").submit(function(){
 
+        $.ajax({
 
+            type: $("#loginForm").attr("method"),
+            url: $("#loginForm").attr("action"),
+            data: $("#loginForm").serialize(),
+            success: function(resp){
+
+            }
+        });
+    });
