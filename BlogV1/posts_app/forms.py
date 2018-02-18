@@ -1,4 +1,5 @@
 from django import forms
+
 from models import Comment, Reply
 from django.contrib.auth import authenticate,get_user_model ,login
 
@@ -53,7 +54,6 @@ class UserRegForm(forms.ModelForm):
         return email
 
 
-
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
@@ -88,10 +88,7 @@ class ReplyForm(forms.ModelForm):
             }),
         }
 
-        labels = {
 
-            'reply_text': '',
-        }
 
 
 
