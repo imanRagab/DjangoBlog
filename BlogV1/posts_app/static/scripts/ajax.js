@@ -1,62 +1,34 @@
 $(function(){
 
-    ////////////////////////////////////////////
+    $("#sendComment").click(function(){
 
-//    $("#sendComment").click(function(){
-//
-//
-//        $.ajax({
-//
-//        url: '',
-//        type: 'post',
-//        data: {},
-//        success: function(){
-//
-//
-//
-//
-//
-//        }
-//
-//
-//
-//        });
-//
-//    });
+
+        $.ajax({
+
+        url: '',
+        type: 'post',
+        data: {},
+        success: function(){
+        }
+        });
+    });
 
     /////////////////////////////////////////
 
+    $("#sendReply").on('click', function(e){
 
-//    $("#sendReply").on('click', function(e){
-//
-//        e.preventDefault()
-//        alert("hi")
+        e.preventDefault()
+        alert("hi")
 
 //        $.ajax({
-//
-//            url: '/ourblog/commentreply',
-//            type: 'get',
-//            data: {
-//
-//                comment_id: $(this).attr("commentId")
-//                reply_text: $("#reply_text").val()
-//
-//                },
-//
-//            success: function(resp){
-//
-//                alert(resp);
-//            }
-//
-//        });
-//    });
 
+    var current_comment_id
 
-    ///////////////////////////////////////
+    });
+
+    /////////////////////////////////////////
 
     $("#likeBtn").click(function(){
-
-
 
         if($(this).html() == "Like"){
 
@@ -98,6 +70,20 @@ $(function(){
                 }
                 });
          }
+        $.ajax({
+
+            url: '/ourblog/likepost',
+            type: 'get',
+            data: {
+                post_id: $(this).attr("postId")
+            },
+
+            success: function(resp){
+
+            
+            }
+
+        });
 
     });
 
@@ -155,39 +141,23 @@ else {
 
     });
 
-//    /////////////////////////////////////
-//
-//    $("#subs").click(function(){
-//
-//        if($(this).html() == "Subscribe")
-//            $(this).html("UnSubscribe");
-//
-//        else
-//            $(this).html("Subscribe");
-//
-//        $(this).toggleClass('btn-primary');
-//        $(this).toggleClass('btn-danger');
-//    });
-//
 
+        }
 
-//
-//   $("#search").autocomplete({
-//        source: "api/search",
-//        minLength: 2,
-////        select: function (event, ui) {
-////            window.location = "/home.html?id=" + ui.item.value;
-//        }
-//    });
-
-
-
-
-
-
-
-
-
-
+        });
 
 });
+
+    $("#loginForm").submit(function(){
+
+        $.ajax({
+
+            type: $("#loginForm").attr("method"),
+            url: $("#loginForm").attr("action"),
+            data: $("#loginForm").serialize(),
+            success: function(resp){
+
+            }
+        });
+    });
+

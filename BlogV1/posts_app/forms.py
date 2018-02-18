@@ -1,13 +1,11 @@
 from django import forms
+
+from models import Comment, Reply
 from django.contrib.auth import authenticate,get_user_model ,login
-
-
 
 User=get_user_model()
 
 # class UserLoginForm(forms.Form):
-#
-#
 #
 #     def clean(self, *args,**kwargs):
 #         username=self.cleaned_data.get("username")
@@ -37,7 +35,6 @@ class UserRegForm(forms.ModelForm):
             'email',
             'password',
             'cpassword'
-
         ]
 
     def clean_cpassword(self):
@@ -49,7 +46,13 @@ class UserRegForm(forms.ModelForm):
 
         return password
 
-from models import Comment, Reply
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        username = self.cleaned_data.get('username')
+        if email and User.objects.filter(email=email).exclude(username=username).exists():
+            raise forms.ValidationError('Email addresses must be unique.')
+        return email
+
 
 class CommentForm(forms.ModelForm):
     class Meta:
@@ -65,6 +68,12 @@ class CommentForm(forms.ModelForm):
             }),
         }
 
+        labels = {
+
+            'comment_text': 'Leave a comment',
+
+        }
+
 class ReplyForm(forms.ModelForm):
     class Meta:
         model = Reply
@@ -78,5 +87,6 @@ class ReplyForm(forms.ModelForm):
                 'class': "form-control",
             }),
         }
+
 
 

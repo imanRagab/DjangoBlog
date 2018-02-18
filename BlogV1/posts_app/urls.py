@@ -1,13 +1,14 @@
 from django.conf.urls import include, url
 import views
 from views import register_view ,login_view , like_view,unlike_view,dislike_view,undislike_view
-
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
 
     url(r'^home/$', views.home),
     url(r'^home/category/(?P<cat_id>[0-9]+)/$', views.category),
+    url(r'^sup/(?P<cat_id>[0-9]+)/(?P<user_id>[0-9]+)/$', views.subscribe),
+    url(r'^unsup/(?P<cat_id>[0-9]+)/(?P<user_id>[0-9]+)/$', views.unsubscribe),
     url(r'^post/(?P<post_id>[0-9]+)/$', views.post),
     url(r'^post/register/$', register_view),
     url(r'^post/login/$', login_view),
@@ -17,6 +18,10 @@ urlpatterns = [
     url(r'^undislike/(?P<post_id>[0-9]+)/$', undislike_view),
    # url(r'^search/$', search_view),
     url(r'^commentreply/$', views.comment_reply)
+    url(r'^logout/$', views.logout_view),
+    url(r'^commentreply/(?P<post_id>[0-9]+)/(?P<comment_id>[0-9]+)', views.comment_reply),
+    url(r'^postcomment/(?P<post_id>[0-9]+)/$', views.post_comment),
+    url(r'^likepost/$', views.like_post)
 
 ]
 

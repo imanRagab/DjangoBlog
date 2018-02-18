@@ -8,65 +8,6 @@
 
     <body>
 
-    {% block reg_form %}
-    <!-- Registeration Modal -->
-    <div class="modal fade" id="myModal2">
-      <div class="modal-dialog">
-        <div class="modal-content">
-
-          <!-- Modal Header -->
-          <div class="modal-header">
-            <h4 class="modal-title text-center">Registration</h4>
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-          </div>
-
-          <!-- Modal body -->
-          <div class="modal-body">
-             <form action="ourblog/register">
-
-                 {{reg_form}}
-
-                </form>
-          </div>
-        </div>
-     </div>
-     </div>
-    {% endblock %}
-
-        <!--{% block login_icon %}-->
-
-            <!--{% if user.is_authenticated %}-->
-
-                <!--<a class="nav-link" href="#">Logout</a>-->
-
-            <!--{% else %}-->
-
-                <!--<a class="nav-link" href="#"  data-toggle="modal" data-target="#myModal1">Login</a>-->
-
-            <!--{% endif %}-->
-
-        <!--{% endblock %}-->
-
-
-        <!--{% block register_icon %}-->
-
-            <!--{% if user.is_authenticated %}-->
-
-            <!--{% else %}-->
-
-                <!--<a class="nav-link" href="#" data-toggle="modal" data-target="#myModal2" >Registration</a>-->
-
-            <!--{% endif %}-->
-
-            <!--{% if user.is_superuser %}-->
-
-                <!--<a class="nav-link" href="#">Admin Panel</a>-->
-
-            <!--{% endif %}-->
-
-        <!--{% endblock %}-->
-
-
         {% block categories_block %}
 
 
@@ -117,14 +58,10 @@
 
                         <p>{{comment.comment_text}}</p>
                         <small class="text-muted">Posted by {{comment.comment_user.username}} on {{comment.comment_created_at}}</small>
-                        {% if user.is_authenticated %}
-                            &nbsp;&nbsp;<button class="btn btn-info" data-toggle="modal" data-target="#replyModal">Reply</button>
-                        {% endif %}
                         <hr>
 
                         <div class="card-body">
 
-                             <div class="card-body">
 
                                 {%  for comment_replies in replies  %}
 
@@ -142,14 +79,34 @@
 
                                 {%  endfor  %}
 
-                             </div>
+                                 {% if user.is_authenticated %}
+                                    <form method="get" id="replyForm" action="/ourblog/commentreply/{{post.id}}/{{comment.id}}">{% csrf_token %}
+
+                                        {{reply_form}}<br>
+
+                                    <!--<div class="row">-->
+                                        <!--<button type="submit" class="btn btn-info col-2 offset-1">Reply</button>-->
+                                    <!--</div>-->
+
+                                    </form>
+                                 {% endif %}
 
                         </div>
 
                     {%  endfor  %}
+
                     {% if user.is_authenticated %}
-                        <button class="btn btn-info" data-toggle="modal" data-target="#commentModal">Leave a comment</button>
+                        <form method="get" id="commentForm" action="/ourblog/postcomment/{{post.id}}">{% csrf_token %}
+
+                            {{comment_form}}<br>
+
+                              <div class="row">
+                                <button type="submit" class="btn btn-info col-2 offset-1">Comment</button>
+                              </div>
+
+                            </form>
                     {% endif %}
+
                 </div>
               </div>
               <!-- /.card -->
@@ -157,66 +114,62 @@
 
             <!-- Comment Modal -->
 
-            <div class="modal fade" id="commentModal">
-              <div class="modal-dialog">
-                    <div class="modal-content">
+            <!--<div class="modal fade" id="commentModal">-->
+              <!--<div class="modal-dialog">-->
+                    <!--<div class="modal-content">-->
 
-                      <!-- Modal Header -->
-                      <div class="modal-header">
-                        <h4 class="modal-title text-center">Leave a comment !</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                      </div>
+                      <!--&lt;!&ndash; Modal Header &ndash;&gt;-->
+                      <!--<div class="modal-header">-->
+                        <!--<h4 class="modal-title text-center">Leave a comment !</h4>-->
+                        <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
+                      <!--</div>-->
 
                       <!-- Modal body -->
-                      <div class="modal-body">
-                         <form method="post">{% csrf_token %}
+                      <!--<div class="modal-body">-->
+                         <!--<form method="get" id="commentForm" action="/ourblog/postcomment/{{post.id}}">{% csrf_token %}-->
 
-                            {{comment_form}}<br>
+                            <!--{{comment_form}}<br>-->
 
-                              <div class="row">
-                                <button type="submit" class="btn btn-info col-4 offset-4">Comment</button>
-                              </div>
+                              <!--<div class="row">-->
+                                <!--<button type="submit" class="btn btn-info col-4 offset-4">Comment</button>-->
+                              <!--</div>-->
 
-                            </form>
-                      </div>
-                    </div>
-                </div>
-            </div>
+                            <!--</form>-->
+                      <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
 
             <!-- Reply Modal -->
 
-            <div class="modal fade" id="replyModal">
-              <div class="modal-dialog">
-                    <div class="modal-content">
+            <!--<div class="modal fade" id="replyModal">-->
+              <!--<div class="modal-dialog">-->
+                    <!--<div class="modal-content">-->
 
                       <!-- Modal Header -->
-                      <div class="modal-header">
-                        <h4 class="modal-title text-center">Your reply</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                      </div>
+                      <!--<div class="modal-header">-->
+                        <!--<h4 class="modal-title text-center">Your reply</h4>-->
+                        <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
+                      <!--</div>-->
 
-                      <!-- Modal body -->
-                      <div class="modal-body">
-                         <form method="post">{% csrf_token %}
+                       <!--Modal body -->
+                      <!--<div class="modal-body">-->
+                         <!--<form method="get" id="replyForm" action="/ourblog/commentreply/{{post.id}}">{% csrf_token %}-->
 
-                            {{reply_form}}<br>
+                            <!--{{reply_form}}<br>-->
 
-                              <div class="row">
-                                <button type="submit" class="btn btn-info col-4 offset-4">Send</button>
-                              </div>
+                              <!--<div class="row">-->
+                                <!--<button type="submit" class="btn btn-info col-4 offset-4">Send</button>-->
+                              <!--</div>-->
 
-                            </form>
-                      </div>
-                    </div>
-                </div>
-            </div>
+                            <!--</form>-->
+                      <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
 
         {% endblock %}
 
 
     </body>
-
-
-
-
 </html>
