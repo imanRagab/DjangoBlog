@@ -222,7 +222,7 @@ body {
 	line-height: 30px;
 	padding: 0;
 }
-.quick-press .save, .quick-press .delet {
+.quick-press .save, .quick-press .delete {
 	font-family: 'icomoon';
 	width: 37px;
 	background: -webkit-linear-gradient(top,rgb(246,246,240),rgb(232,232,232));
