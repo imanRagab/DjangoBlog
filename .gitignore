@@ -1,4 +1,4 @@
-./idea
+.idea/
 BlogV1/db.py
 BlogV1/setting.y
 *.pyc
