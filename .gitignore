@@ -1,6 +1,6 @@
 .idea/*.iml
 .idea/*.xml
 BlogV1/db.py
-BlogV1/setting.y
+BlogV1/setting.py
 *.pyc
 

@@ -80,10 +80,11 @@ WSGI_APPLICATION = 'BlogV1.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'pythonBlog',
+        'NAME': 'ourBlogdb',
         'HOST': 'localhost',
         'USER': 'root',
-        'PASSWORD': '123456'
+        'PASSWORD': '1942'
+>>>>>>> origin/posts_branch
     }
 }
 
