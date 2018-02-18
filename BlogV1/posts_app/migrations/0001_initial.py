@@ -21,14 +21,6 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='CategorySubscribtion',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('subscribed_category', models.ForeignKey(to='posts_app.Category')),
-                ('subscribed_user', models.ForeignKey(default=None, to=settings.AUTH_USER_MODEL)),
-            ],
-        ),
-        migrations.CreateModel(
             name='Comment',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -37,10 +29,22 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='LikesDislikes',
+            name='Dislike',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('type', models.IntegerField(choices=[(1, b'like'), (0, b'dislike')])),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Forbidden',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('word', models.CharField(max_length=255)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Like',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
             ],
         ),
         migrations.CreateModel(
@@ -66,6 +70,14 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='Subscription',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('subscriped_category', models.ForeignKey(to='posts_app.Category')),
+                ('subscriped_user', models.ForeignKey(default=None, to=settings.AUTH_USER_MODEL)),
+            ],
+        ),
+        migrations.CreateModel(
             name='Tag',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -74,13 +86,23 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.AddField(
-            model_name='likesdislikes',
-            name='likes_dislikes_post',
+            model_name='like',
+            name='like_post',
             field=models.ForeignKey(to='posts_app.Post'),
         ),
         migrations.AddField(
-            model_name='likesdislikes',
-            name='likes_dislikes_user',
+            model_name='like',
+            name='like_user',
+            field=models.ForeignKey(default=None, to=settings.AUTH_USER_MODEL),
+        ),
+        migrations.AddField(
+            model_name='dislike',
+            name='dislike_post',
+            field=models.ForeignKey(to='posts_app.Post'),
+        ),
+        migrations.AddField(
+            model_name='dislike',
+            name='dislike_user',
             field=models.ForeignKey(default=None, to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(

@@ -67,12 +67,15 @@ class Dislike(models.Model):
     def __str__(self):
         return self.dislike_user.username + " dislikes " + self.dislike_post.post_title
 
-class CategorySubscribtion(models.Model):
-    subscribed_category = models.ForeignKey(Category)
-    subscribed_user = models.ForeignKey(User, default=None)
+class Subscription(models.Model):
+    subscriped_category = models.ForeignKey(Category)
+    subscriped_user = models.ForeignKey(User, default=None)
 
     def __str__(self):
-        return self.subscribed_user.username + " has subscribed to " + self.subscribed_category.category_name
+        return self.subscriped_user.username + " has subscriped to " + self.subscriped_category.category_name
 
 class Forbidden(models.Model):
     word = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.word
