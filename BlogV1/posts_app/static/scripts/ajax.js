@@ -171,4 +171,23 @@ else {
 //
 
 
+//
+//   $("#search").autocomplete({
+//        source: "api/search",
+//        minLength: 2,
+////        select: function (event, ui) {
+////            window.location = "/home.html?id=" + ui.item.value;
+//        }
+//    });
+
+
+
+
+
+
+
+
+
+
+
 });

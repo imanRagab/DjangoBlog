@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^unlike/(?P<post_id>[0-9]+)/$', unlike_view),
     url(r'^dislike/(?P<post_id>[0-9]+)/$', dislike_view),
     url(r'^undislike/(?P<post_id>[0-9]+)/$', undislike_view),
+   # url(r'^search/$', search_view),
     url(r'^commentreply/$', views.comment_reply)
 
 ]
