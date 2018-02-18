@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import Textarea, TextInput
 
 from models import Comment, Reply
 from django.contrib.auth import authenticate,get_user_model ,login
@@ -57,10 +58,11 @@ class UserRegForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-
         fields = ['comment_text']
         widgets = {
             'comment_text': forms.Textarea(attrs={
+                'rows': 5,
+                'cols': 20,
                 'id': 'comment-text',
                 'required': True,
                 'placeholder': 'Leave positive words...',
@@ -71,6 +73,8 @@ class CommentForm(forms.ModelForm):
         labels = {
 
             'comment_text': 'Leave a comment',
+
+
 
         }
 
@@ -83,9 +87,14 @@ class ReplyForm(forms.ModelForm):
             'reply_text': forms.TextInput(attrs={
                 'id': 'reply-text',
                 'required': True,
-                'placeholder': 'Make your words positive...',
+                'placeholder': 'Reply...',
                 'class': "form-control",
             }),
+        }
+
+        labels = {
+
+            'reply_text': '',
         }
 
 

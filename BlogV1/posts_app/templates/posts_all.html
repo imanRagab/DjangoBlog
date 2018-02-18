@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,13 +10,28 @@
 
 
 {% for post in posts_all %}
+<br><br>
+<a href="http://127.0.0.1:8000/ourblog/post/{{ post.id }}" class="list-group-item">{{ post.post_category }}</a><br>
 
-<a href="http://127.0.0.1:8000/ourblog/post/{{ post.id }}" class="list-group-item">{{ post.post_category }}</a>
+    <div class="card-body">
+          <div class="row">
 
-<h1>{{ post.post_title }}</h1><br/>
-<h1>{{ post.post_author }}</h1>
-<h1>{{ post.post_category }}</h1>
-<h1>{{ post.post_content }}</h1>
+              <div class="col-md-6">
+                  <h3 class="text-primary">Post Title:</h3><h4 class="card-title">{{post.post_title}}</h4>
+                      <h3 class="text-primary">Post Author:</h3><h5>{{post.post_author}}</h5>
+                  <div  class="card"><p width="300px" height="600px">{{post.post_content}}</p></div>
+              </div>
+              <div class="col-md-2">
+                     <img class="imgAbt" width="250px"  height="250px" src="{% static post.post_picture %}" alt="">
+
+              </div>
+
+             </div>
+
+    </div>
+
+
+
 <hr/>
 
 {% endfor %}
@@ -23,3 +39,12 @@
 
 </body>
 </html>
+
+
+
+
+<!--<h3 class="text-primary">Post Title:</h3><h4>{{ post.post_title }}</h4>-->
+  <!--<h3 class="text-primary">Post Author:</h3><h5>{{ post.post_author }}</h5>-->
+<!--<h1>{{ post.post_category }}</h1>-->
+<!--<h1>{{ post.post_content }}</h1>-->
+<!--<img class="imgAbt" width="250px"  height="250px" src="{% static post.post_picture %}" alt="">-->

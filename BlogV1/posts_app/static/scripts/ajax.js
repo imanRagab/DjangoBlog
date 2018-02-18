@@ -1,7 +1,7 @@
 $(function(){
 
 
-    /*
+
     $("#sendComment").click(function(){
 
 
@@ -118,7 +118,7 @@ $(function(){
 
  }
 
-else {
+        else {
 
              $(this).html("Dislike")
              $("#likeBtn").attr('disabled',false)
@@ -144,11 +144,7 @@ else {
     });
 
 
-        }
 
-        });
-
-});
 
     $("#loginForm").submit(function(){
 
@@ -164,7 +160,7 @@ else {
     });
 
 
-*/
+
 
 $("#search").on("keyup",function(){
                 searchlist = $("#searchlist");
@@ -192,6 +188,16 @@ function searchItem(PostData){
     console.log(PostData);
     return $('<li class="searchitem"><a href="http://127.0.0.1:8000/ourblog/post/'+PostData.pk+'">'+PostData.fields.post_title+'</a></li>');
 }
+
+//
+//$("label").each(function(){
+//
+//
+//    $(this).css("color","#007bff")
+//
+//
+//})
+
 
 
 });

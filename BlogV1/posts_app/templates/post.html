@@ -3,7 +3,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/html">
     <head>
         <meta charset="UTF-8">
-        <title></title>
+
     </head>
 
     <body>
@@ -26,17 +26,30 @@
             {% load staticfiles %}
 
             <div class="card mt-4">
-                <img class="card-img-top img-fluid" src="{% static post.post_picture %}" alt="">
-                <div class="card-body">
-                  <h1 class="card-title">{{post.post_title}}</h1>
-                  <h4>{{post.post_author}}</h4>
-                  <p class="card-text">{{post.post_content}}</p>
-                  <span class="text-warning">&#9733; &#9733; &#9733; &#9733; &#9734;</span>
+
+
+                    <div class="card-body">
+                          <div class="row">
+
+                              <div class="col-md-6">
+                                  <h3 class="text-primary">Post Title:</h3><h4 class="card-title">{{post.post_title}}</h4>
+                                      <h3 class="text-primary">Post Author:</h3><h5>{{post.post_author}}</h5>
+                                  <div  class="card"><p width="300px" height="600px">{{post.post_content}}</p></div>
+                              </div>
+                              <div class="col-md-2">
+                                     <img class="imgAbt" width="250px"  height="250px" src="{% static post.post_picture %}" alt="">
+
+                              </div>
+
+                             </div>
+
                   {% for tag in tags %}
                         {{tag}}
                     {% endfor %}
                     <span class="pull-right">
+
                         {% if user.is_authenticated %}
+
                                 <!--<img src="{% static 'images/icons/thumb-up.svg'  %}"> -->
                                 <!--<img src="{% static 'images/icons/thumb-down.svg' %}">-->
                             <button class="btn btn-success btn-sm" id="likeBtn" postId="{{post.id}}">Like</button>
@@ -44,12 +57,12 @@
 
                         {% endif %}
                     </span>
-                </div>
+                    </div>
               </div>
               <!-- /.card -->
 
               <div class="card card-outline-secondary my-4">
-                <div class="card-header">
+                <div class="card-header text-primary">
                   Comments
                 </div>
                 <div class="card-body">
@@ -101,7 +114,7 @@
                             {{comment_form}}<br>
 
                               <div class="row">
-                                <button type="submit" class="btn btn-info col-2 offset-1">Comment</button>
+                                <button type="submit" class="btn btn-info col-2 offset-9">Comment</button>
                               </div>
 
                             </form>
@@ -111,62 +124,6 @@
               </div>
               <!-- /.card -->
 
-
-            <!-- Comment Modal -->
-
-            <!--<div class="modal fade" id="commentModal">-->
-              <!--<div class="modal-dialog">-->
-                    <!--<div class="modal-content">-->
-
-                      <!--&lt;!&ndash; Modal Header &ndash;&gt;-->
-                      <!--<div class="modal-header">-->
-                        <!--<h4 class="modal-title text-center">Leave a comment !</h4>-->
-                        <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
-                      <!--</div>-->
-
-                      <!-- Modal body -->
-                      <!--<div class="modal-body">-->
-                         <!--<form method="get" id="commentForm" action="/ourblog/postcomment/{{post.id}}">{% csrf_token %}-->
-
-                            <!--{{comment_form}}<br>-->
-
-                              <!--<div class="row">-->
-                                <!--<button type="submit" class="btn btn-info col-4 offset-4">Comment</button>-->
-                              <!--</div>-->
-
-                            <!--</form>-->
-                      <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-
-            <!-- Reply Modal -->
-
-            <!--<div class="modal fade" id="replyModal">-->
-              <!--<div class="modal-dialog">-->
-                    <!--<div class="modal-content">-->
-
-                      <!-- Modal Header -->
-                      <!--<div class="modal-header">-->
-                        <!--<h4 class="modal-title text-center">Your reply</h4>-->
-                        <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
-                      <!--</div>-->
-
-                       <!--Modal body -->
-                      <!--<div class="modal-body">-->
-                         <!--<form method="get" id="replyForm" action="/ourblog/commentreply/{{post.id}}">{% csrf_token %}-->
-
-                            <!--{{reply_form}}<br>-->
-
-                              <!--<div class="row">-->
-                                <!--<button type="submit" class="btn btn-info col-4 offset-4">Send</button>-->
-                              <!--</div>-->
-
-                            <!--</form>-->
-                      <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
 
         {% endblock %}
 
