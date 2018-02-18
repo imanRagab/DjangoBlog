@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+
 from django.apps import apps
 from django.contrib.auth.models import User
 
@@ -52,7 +53,7 @@ class Tag(models.Model):
 
 
 class Like(models.Model):
-    like_user = models.ForeignKey(User, default=None)
+    like_user = models.ForeignKey(User)
     like_post = models.ForeignKey(Post)
 
     def __str__(self):
@@ -60,7 +61,7 @@ class Like(models.Model):
 
 
 class Dislike(models.Model):
-    dislike_user = models.ForeignKey(User, default=None)
+    dislike_user = models.ForeignKey(User)
     dislike_post = models.ForeignKey(Post)
 
     def __str__(self):
@@ -73,7 +74,6 @@ class CategorySubscribtion(models.Model):
 
     def __str__(self):
         return self.subscribed_user.username + " has subscribed to " + self.subscribed_category.category_name
-
 
 class Forbidden(models.Model):
     word = models.CharField(max_length=255)

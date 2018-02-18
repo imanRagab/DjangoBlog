@@ -1,16 +1,15 @@
 from django.core import serializers
+from django.http import HttpResponse
 from django.http import JsonResponse
-
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from .forms import UserRegForm
 from django.contrib.auth import authenticate, login, logout
-
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from models import Post, Category, Comment, Tag, Reply, Like, Dislike, Forbidden, CategorySubscribtion
 from forms import ReplyForm, CommentForm
-
+import csv
 
 def post(request, post_id):
     comment_form = CommentForm()
@@ -212,3 +211,39 @@ def is_supped(request,cat_id):
         return True
     except:
         return False
+
+def like_view(request,post_id):
+    pid=Post.objects.get(id=post_id)
+    Like.objects.create(like_post=pid,like_user=request.user)
+    return JsonResponse({"state":True,"safe":False})
+
+
+def unlike_view(request,post_id):
+    pid=Post.objects.get(id=post_id)
+    Like.objects.filter(like_post=pid,like_user=request.user).delete()
+    return JsonResponse({"state": True, "safe": False})
+
+
+
+def dislike_view(request,post_id):
+    pid=Post.objects.get(id=post_id)
+    Dislike.objects.create(dislike_user=request.user,dislike_post=pid)
+    count = Dislike.objects.all().count()
+    print count
+    if count == 10:
+        Post.objects.get(id=post_id).delete()
+    return JsonResponse({"state": True, "safe": False})
+
+
+
+def undislike_view(request,post_id):
+    pid=Post.objects.get(id=post_id)
+    Dislike.objects.filter(dislike_user_id=request.user,dislike_post_id=pid).delete()
+    return JsonResponse({"state": True, "safe": False})
+
+
+
+def search_view(request,searchengine):
+        result = Post.objects.filter(post_title__contains=searchengine)
+        return JsonResponse(serializers.serialize('json',result),safe=False)
+
