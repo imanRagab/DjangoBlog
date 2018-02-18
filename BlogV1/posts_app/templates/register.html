@@ -1,31 +1,12 @@
-<!DOCTYPE HTML>
 {% extends "base.html" %}
-<html>
 
-	<head></head>
-
-
-	<body>
-
+{% block reg_form %}
 			<form method="POST" action="/ourblog/register/">{% csrf_token %}
 				{{ form.as_p}}
 				<button type="submit">Save</button>
 				<button type="reset">Reset</button>
 			</form>
 
-		{% endblock %}
 
 		{% endblock %}
-
-
-	</body>
-
-
-
-
-
-
-
-
-</html>
 

@@ -1,3 +1,4 @@
+from django.core import serializers
 from django.http import JsonResponse
 
 from django.shortcuts import render, redirect
@@ -53,6 +54,7 @@ def register_view(request):
     }
     return render(request, 'register.html', context)
 
+
 def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -70,21 +72,26 @@ def login_view(request):
 
     return render(request, 'login.html')
 
+
 @login_required
 def logged_in_only(request):
     return HttpResponse("you are authenticated")
     context = {'post': post, 'categories': categories,
-               'comments':comments, 'replies':comments_replies,
-               'comment_form':comment_form,
-               'reply_form':reply_form,
-               'tags':tags}
+               'comments': comments, 'replies': comments_replies,
+               'comment_form': comment_form,
+               'reply_form': reply_form,
+               'tags': tags}
 
     return render(request, 'post.html', context)
 
+
 def home(request):
     categories = Category.objects.all()
+    retCats = []
+    for cat in categories:
+        retCats.append({"state": is_supped(request, cat.id), "cat": cat})
     posts_all = Post.objects.all()
-    context = {'categories': categories , 'posts_all':posts_all , 'Like':Like , 'Dislike':Dislike }
+    context = {'categories': retCats, 'posts_all': posts_all, 'Like': Like, 'Dislike': Dislike}
 
     return render(request, 'home.html', context)
 
@@ -92,15 +99,19 @@ def home(request):
 def category(request, cat_id):
     categories = Category.objects.all()
     category = Category.objects.get(id=cat_id)
+    retCats = []
+    for cat in categories:
+        retCats.append({"state": is_supped(request, cat.id), "cat": cat})
+    #     retCats.append({"state":is_supped(request,cat.id),"cat":serializers.serialize('json',[cat])})
+    # return JsonResponse(retCats, safe=False)
 
     # return HttpResponse(category)
     cat_posts = Post.objects.filter(post_category__id=cat_id)
 
     # cat_post = map(lambda x : x, cat_posts)
-    context = {'category': category, 'categories': categories, 'cat_posts': cat_posts}
+    context = {'category': category, 'categories': retCats, 'cat_posts': cat_posts}
 
     return render(request, 'category.html', context)
-
 
 
 def comment_reply(request, post_id, comment_id):
@@ -151,6 +162,7 @@ def like_post(request):
     else:
         return HttpResponse("Request method is not a GET")
 
+
 def post_comment(request, post_id):
     if request.method == 'GET':
         post = Post.objects.get(pk=post_id)
@@ -165,11 +177,12 @@ def post_comment(request, post_id):
 
 
 def subscribe(request, cat_id, user_id):
-    new_sub = CategorySubscribtion.objects.create(subscribed_category_id = cat_id,subscribed_user_id = user_id)
+    new_sub = CategorySubscribtion.objects.create(subscribed_category_id=cat_id, subscribed_user_id=user_id)
     return JsonResponse({'subs': True}, safe=False)
 
+
 def unsubscribe(request, cat_id, user_id):
-    un_sub = CategorySubscribtion.objects.get(subscribed_category_id = cat_id,subscribed_user_id = user_id)
+    un_sub = CategorySubscribtion.objects.get(subscribed_category_id=cat_id, subscribed_user_id=user_id)
     un_sub.delete()
     return JsonResponse({'unsubs': True}, safe=False)
 
@@ -186,7 +199,16 @@ def like_post(request):
     else:
         return HttpResponse("Request method is not a GET")
 
-def logout_view(request):
-	logout(request)
-	return redirect(request.META['HTTP_REFERER'])
 
+def logout_view(request):
+    logout(request)
+    return redirect(request.META['HTTP_REFERER'])
+
+
+def is_supped(request,cat_id):
+    try:
+        CategorySubscribtion.objects.get(subscribed_user=request.user,
+                                         subscribed_category=Category.objects.get(id=cat_id))
+        return True
+    except:
+        return False

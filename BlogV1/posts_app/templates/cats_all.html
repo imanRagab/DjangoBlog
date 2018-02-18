@@ -8,12 +8,23 @@
 
 <a href="http://127.0.0.1:8000/ourblog/home" class="list-group-item">Home</a>
 
+{% if user.is_authenticated %}
+
 {% for category in categories %}
+    <!--{{category.cat}}-->
 <div class="row">
-<a href="http://127.0.0.1:8000/ourblog/home/category/{{ category.id }}" class="list-group-item col-4 header">{{ category.category_name }}</a>
-<button class="float-right col-4 offset-1 btn btn-primary subs" >Subscribe</button>
+    <!--{{category.state}}-->
+<a href="http://127.0.0.1:8000/ourblog/home/category/{{ category.cat.id }}" class="list-group-item col-4 header">{{ category.cat.category_name }}</a>
+    {% if category.state %}
+<button class="float-right col-4 offset-1 btn btn-danger subs" data1="{{category.cat.id}}" data2="{{ user.id }}" >UnSubscribe</button>
+    {% else %}
+<button class="float-right col-4 offset-1 btn btn-primary subs" data1="{{category.cat.id}}" data2="{{ user.id }}" >Subscribe</button>
+
+    {% endif %}
 </div>
 {% endfor %}
+
+{% endif %}
 
 </body>
 </html>
