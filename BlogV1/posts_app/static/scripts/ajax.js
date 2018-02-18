@@ -1,5 +1,7 @@
 $(function(){
 
+
+    /*
     $("#sendComment").click(function(){
 
 
@@ -161,3 +163,35 @@ else {
         });
     });
 
+
+*/
+
+$("#search").on("keyup",function(){
+                searchlist = $("#searchlist");
+            $.ajax({
+                url: 'http://127.0.0.1:8000/ourblog/search/'+$(this).val(),
+                type: 'get',
+                success: function(response){
+                    data = JSON.parse(response);
+                    console.log(data);
+
+                searchlist.html("");
+                    $(data).each(function(){
+                        searchlist.append(searchItem(this));
+                    });
+                },
+                error:function(){
+                searchlist.html("");
+                },
+        });
+});
+
+
+
+function searchItem(PostData){
+    console.log(PostData);
+    return $('<li class="searchitem"><a href="http://127.0.0.1:8000/ourblog/post/'+PostData.pk+'">'+PostData.fields.post_title+'</a></li>');
+}
+
+
+});

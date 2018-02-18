@@ -1,5 +1,5 @@
-
-from django.http import HttpResponse, JsonResponse
+from django.core import serializers
+from django.http import HttpResponse
 from django.shortcuts import render
 from models import Post, Category, Comment, Tag, Reply ,Like
 
@@ -228,28 +228,7 @@ def undislike_view(request,post_id):
 
 
 
-# def search(file_path):
-#    reader = csv.DictReader(open(file_path))
-#         for row in reader:
-#             srch = Post()
-#             srch.save()
-
-
-# def search(request):
-#     if request.is_ajax():
-#         q = request.GET.get('term', '')
-#         posts = Post.objects.filter(post_title = q )[:20]
-#         results = []
-#         for post in posts:
-#             post_json = {}
-#             post_json['id'] = post.rxcui
-#             post_json['label'] = drug.short_name
-#             post_json['value'] = drug.short_name
-#             results.append(post_json)
-#         data = json.dumps(results)
-#     else:
-#         data = 'fail'
-#     mimetype = 'application/json'
-#     return HttpResponse(data, mimetype)
-
+def search_view(request,searchengine):
+        result = Post.objects.filter(post_title__contains=searchengine)
+        return JsonResponse(serializers.serialize('json',result),safe=False)
 
