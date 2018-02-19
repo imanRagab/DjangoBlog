@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from posts_app.models import Post
+
+class PostModelAdmin(admin.ModelAdmin):
+    list_display=["__unicode__","timestamp"]
+    class Meta:
+        model=Post
