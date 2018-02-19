@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils import timezone
-
 from django.apps import apps
 from django.contrib.auth.models import User
 
@@ -31,7 +30,11 @@ class Comment(models.Model):
     comment_created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return self.comment_text
+        return self.comment_user.username \
+               + " has commented "\
+               + self.comment_text \
+               + " on " \
+               + self.comment_post.post_title
 
 
 class Reply(models.Model):
@@ -41,7 +44,13 @@ class Reply(models.Model):
     reply_created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return self.reply_text
+        return self.reply_user.username \
+               + " has replied " \
+               + self.reply_text \
+               + " to " \
+               + self.reply_comment.comment_user.username \
+               + "'s comment on " \
+               + self.reply_comment.comment_post.post_title
 
 
 class Tag(models.Model):

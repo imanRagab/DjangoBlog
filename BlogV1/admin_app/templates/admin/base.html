@@ -1,84 +1,53 @@
 <!DOCTYPE HTML>
 {% load static %}
 <html>
-
     <head>
-
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+            <!-- Bootstrap core CSS -->
+            <link rel="stylesheet" type="text/css" href="{% static 'styles/bootstrap.min.css' %}"/>
             <link rel="stylesheet" type="text/css" href="{% static 'styles/style.css' %}"/>
+            <link rel="stylesheet" type="text/css" href="{% static 'styles/sb-admin-2.css' %}"/>
+            <link rel="stylesheet" type="text/css" href="{% static 'styles/font-awesome.min.css' %}"/>
 
     </head>
     <body>
 
-        <div class="admin-panel clearfix">
+        <div class="container-fluid">
           <div class="slidebar">
             <div class="logo">
               <a href=""></a>
             </div>
             <ul>
                 <li><a href="/admin/dashboard" id="targeted">dashboard</a></li>
-                <li><a href="/admin/users">users</a></li>
-                <li><a href="/admin/admin/categories">categories</a></li>
-                <li><a href="/admin/subscription">subscription</a></li>
-                <li><a href="/admin/posts">posts</a></li>
-                <li><a href="/admin/tags">tags</a></li>
-                <li><a href="/admin/comments">comments</a></li>
-                <li><a href="/admin/replies">replies</a></li>
-                <li><a href="/admin/likes">likes</a></li>
-                <li><a href="/admin/dislikes">dislikes</a></li>
-                <li><a href="/admin/forbiddenwords">forbidden words</a></li>
+                <li><a href="/admin/all/user">users</a></li>
+                <li><a href="/admin/all/category">categories</a></li>
+                <li><a href="/admin/all/subscription">subscription</a></li>
+                <li><a href="/admin/all/post">posts</a></li>
+                <li><a href="/admin/all/tag">tags</a></li>
+                <li><a href="/admin/all/comment">comments</a></li>
+                <li><a href="/admin/all/reply">replies</a></li>
+                <li><a href="/admin/all/like">likes</a></li>
+                <li><a href="/admin/all/dislike">dislikes</a></li>
+                <li><a href="/admin/all/forbidden">forbidden words</a></li>
             </ul>
           </div>
           <div class="main">
             <ul class="topbar clearfix">
-              <li><a href="#">q</a></li>
-              <li><a href="#">p</a></li>
-              <li><a href="#">o</a></li>
-              <li><a href="#">f</a></li>
-              <li><a href="#">n</a></li>
+                {% if model == "post" or model == "category" or model == "forbidden"%}
+              <li><a href="/admin/add/{{model}}"><button type="button" class="btn-sm btn-success">+</button></a></li>
+                {% endif %}
             </ul>
-            <div class="mainContent clearfix">
-                <div id="dashboard">
-                  {% block dashboard %}{% endblock %}
-               </div>
-               <div id="posts">
-                   {% block posts_block %}{% endblock %}
-               </div>
-               <div id="categories">
-                    {% block categories_block %}{% endblock %}
-               </div>
-               <div id="dislikes">
-                    {% block dislikes_block %}{% endblock %}
-               </div>
-               <div id="likes">
-                     {% block likes_block %}{% endblock %}
-               </div>
-               <div id="comments">
-                     {% block comments_block %}{% endblock %}
-               </div>
-               <div id="subscription">
-                     {% block subscription_block %}{% endblock %}
-               </div>
-               <div id="replies">
-                     {% block replies_block %}{% endblock %}
-               </div>
-               <div id="users">
-                     {% block users_block %}{% endblock %}
-               </div>
-               <div id="tags">
-                     {% block tags_block %}{% endblock %}
-               </div>
-               <div id="forbiddenwords">
-                     {% block forbiddenwords_block %}{% endblock %}
-               </div>
+            <div class="container-fluid">
+
+                {% block content %}{% endblock %}
              </div>
-             <ul class="statusbar">
-               <li><a href=""></a></li>
-               <li><a href=""></a></li>
-               <li class="profiles-setting"><a href="">s</a></li>
-               <li class="logout"><a href="">k</a></li>
-             </ul>
            </div>
         </div>
+
+    <script src="{% static 'scripts/jquery.min.js' %}"></script>
+    <script src="{% static 'scripts/bootstrap.bundle.min.js' %}"></script>
+
 
     </body>
 

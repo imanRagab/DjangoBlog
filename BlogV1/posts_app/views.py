@@ -1,5 +1,5 @@
 from django.core import serializers
-from django.http import HttpResponse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
@@ -21,11 +21,21 @@ def post(request, post_id):
     reg_form = UserRegForm()
     likes = len(Like.objects.filter(like_post__id=post_id))
     dislikes = len(Dislike.objects.filter(dislike_post__id=post_id))
+    forbidden_words = Forbidden.objects.all()
     comments_replies = []
 
-    for comment in comments:
+    for comment in comments:## check comments for forbidden words
+        for forbidden_word in forbidden_words:
+            comment.comment_text = comment.comment_text.replace(forbidden_word.word, ("*" * len(forbidden_word.word)))
         replies = Reply.objects.filter(reply_comment__id=comment.id)
         comments_replies.append(replies)
+
+    for reply in replies:## check replies for forbidden words
+        for forbidden_word in forbidden_words:
+            reply.reply_text = reply.reply_text.replace(forbidden_word.word, ("*" * len(forbidden_word.word)))
+
+
+
     context = {'post': post, 'categories': categories,
                'comments': comments, 'replies': comments_replies,
                'comment_form': comment_form,
@@ -108,9 +118,15 @@ def category(request, cat_id):
 
     # return HttpResponse(category)
     cat_posts = Post.objects.filter(post_category__id=cat_id)
+    paginator = Paginator(cat_posts, 2)  # Show 25 contacts per page
+    if request.GET.get('page'):
+        page = request.GET.get('page')
+    else:
+        page = 1
+    page_posts = paginator.page(page)
 
     # cat_post = map(lambda x : x, cat_posts)
-    context = {'category': category, 'categories': retCats, 'cat_posts': cat_posts}
+    context = {'category': category, 'categories': retCats, 'page_posts': page_posts}
 
     return render(request, 'category.html', context)
 
@@ -119,10 +135,10 @@ def comment_reply(request, post_id, comment_id):
     if request.method == 'GET':
         reply_text = request.GET['reply_text']
 
-        forbidden_words = Forbidden.objects.all()
-
-        for forbidden_word in forbidden_words:
-            reply_text = reply_text.replace(forbidden_word.word, ("*" * len(forbidden_word.word)))
+        # forbidden_words = Forbidden.objects.all()
+        #
+        # for forbidden_word in forbidden_words:
+        #     reply_text = reply_text.replace(forbidden_word.word, ("*" * len(forbidden_word.word)))
 
         comment = Comment.objects.get(pk=comment_id)
         reply = Reply(reply_comment=comment, reply_text=reply_text, reply_user=request.user)
@@ -137,10 +153,10 @@ def post_comment(request, post_id):
     if request.method == 'GET':
         post = Post.objects.get(pk=post_id)
         comment_text = request.GET['comment_text']
-        forbidden_words = Forbidden.objects.all()
-
-        for forbidden_word in forbidden_words:
-            comment_text = comment_text.replace(forbidden_word.word, ("*" * len(forbidden_word.word)))
+        # forbidden_words = Forbidden.objects.all()
+        #
+        # for forbidden_word in forbidden_words:
+        #     comment_text = comment_text.replace(forbidden_word.word, ("*" * len(forbidden_word.word)))
 
         comment = Comment(comment_post=post, comment_text=comment_text, comment_user=request.user)
         comment.save()

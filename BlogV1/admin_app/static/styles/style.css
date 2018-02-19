@@ -106,7 +106,7 @@ body {
 	border-right: 1px solid rgb(235,235,235);
 }
 /*mainContent*/
-.mainContent h4 {
+.mainContent h {
 	line-height: 1;
 	font-size: 18px;
 	margin: 1.3em 0 1em;
