@@ -87,7 +87,10 @@
 
                 {% endif %}
 
-                {% if user.is_staff %}
+<!--<<<<<<< HEAD-->
+                <!--{% if user.is_staff %}-->
+<!--=======-->
+                {% if user.is_superuser %}
 
                     <a class="nav-link" href="/ourblog/admin/dashboard">Admin Panel</a>
 
@@ -153,7 +156,7 @@
 
           <!-- Modal body -->
           <div class="modal-body">
-             <form action="/ourblog/login/" method="post">
+             <form action="/ourblog/login/" method="post">{% csrf_token %}
                   <div class="form-group">
                     <input type="text" class="form-control" placeholder="Username" name="username">
                   </div>

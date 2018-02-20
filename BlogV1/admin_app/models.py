@@ -1,3 +1,6 @@
 from django.db import models
 
-# Create your models here.
+from posts_app.models import Post , Category
+
+
+

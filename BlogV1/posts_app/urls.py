@@ -1,10 +1,9 @@
 from django.conf.urls import include, url
-import views
 from views import register_view ,login_view , like_view,unlike_view,dislike_view,undislike_view,search_view
-from django.contrib.auth import views as auth_views
+from views import register_view ,login_view,logout_view
+import views
 
 # handler404 = 'posts_app.views.error_404'
-
 urlpatterns = [
     url(r'^home/$', views.home),
     url(r'^home/category/(?P<cat_id>[0-9]+)/', views.category),
@@ -24,6 +23,7 @@ urlpatterns = [
     url(r'^postcomment/(?P<post_id>[0-9]+)/$', views.post_comment),
     url(r'^likepost/$', views.like_post),
     #url(r'^issuped/(?P<cat_id>[0-9]+)/$', views.is_supped),
+
 
 ]
 

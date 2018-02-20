@@ -57,7 +57,11 @@ ROOT_URLCONF = 'BlogV1.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+<<<<<<< HEAD
         'DIRS': [os.path.join(BASE_DIR, 'templates')],
+=======
+         'DIRS': [os.path.join(BASE_DIR, 'templates')],
+>>>>>>> 3fe577ca46560f783ad0f76a59a5c9845f315f68
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -107,6 +111,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
+<<<<<<< HEAD
 STATIC_URL = os.path.join(BASE_DIR, '/static/')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+=======
+STATIC_URL = os.path.join(BASE_DIR, 'posts_app/static/')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+>>>>>>> 3fe577ca46560f783ad0f76a59a5c9845f315f68

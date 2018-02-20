@@ -3,17 +3,14 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse, Http404
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from .forms import UserRegForm
-from django.contrib.auth import authenticate, login, logout
+from forms import UserRegForm ,UserLoginForm
+from django.contrib.auth import authenticate, login , logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from models import Post, Category, Comment, Tag, Reply, Like, Dislike, Forbidden, CategorySubscribtion
 from forms import ReplyForm, CommentForm, UserLoginForm
 import csv
-
-
 ####################################################################
-
 def post(request, post_id):
 
     comment_form = CommentForm()
@@ -75,17 +72,15 @@ def register_view(request):
         "title": title
     }
     return render(request, 'register.html', context)
-
-
 ####################################################
-
 def login_view(request):
-    login_form = UserLoginForm(request.POST or None)
-    context = {'login_form': login_form}
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username, password=password)
+
+    form = UserLoginForm(request.POST or None)
+    context = {'form': form}
+    if form.is_valid():
+        username=form.cleaned_data.get("username")
+        password = form.cleaned_data.get("password")
+        user=authenticate(username=username , password=password)
         if user is not None:
             if user.is_active:
                 login(request, user)
@@ -96,8 +91,28 @@ def login_view(request):
         else:
             return render(request, 'login.html', context)
 
+    else:
+        return render(request, 'login.html', context)
+
     return render(request, 'login.html', context)
 
+
+#def login_view(request):
+#   if request.method == 'POST':
+#      username = request.POST['username']
+#        password = request.POST['password']
+#        user = authenticate(username=username, password=password)
+#        if user is not None:
+#            if user.is_active:
+#                login(request, user)
+#                return render(request, 'home.html')
+#           else:
+#               return HttpResponse("Your account has been blocked please contact the admin")
+#
+#        else:
+#            return render(request, 'login.html')
+
+#   return render(request, 'login.html')
 
 #####################################################
 
@@ -157,12 +172,10 @@ def category(request, cat_id):
 def comment_reply(request, post_id, comment_id):
     if request.method == 'GET':
         reply_text = request.GET['reply_text']
+        forbidden_words = Forbidden.objects.all()
 
-        # forbidden_words = Forbidden.objects.all()
-        #
-        # for forbidden_word in forbidden_words:
-        #     reply_text = reply_text.replace(forbidden_word.word, ("*" * len(forbidden_word.word)))
-
+        for forbidden_word in forbidden_words:
+            reply_text = reply_text.replace(forbidden_word.word, ("*" * len(forbidden_word.word)))
         comment = Comment.objects.get(pk=comment_id)
         reply = Reply(reply_comment=comment, reply_text=reply_text, reply_user=request.user)
         reply.save()
@@ -178,11 +191,11 @@ def post_comment(request, post_id):
     if request.method == 'GET':
         post = Post.objects.get(pk=post_id)
         comment_text = request.GET['comment_text']
-        # forbidden_words = Forbidden.objects.all()
-        #
-        # for forbidden_word in forbidden_words:
-        #     comment_text = comment_text.replace(forbidden_word.word, ("*" * len(forbidden_word.word)))
 
+        forbidden_words = Forbidden.objects.all()
+
+        for forbidden_word in forbidden_words:
+            comment_text = comment_text.replace(forbidden_word.word, ("*" * len(forbidden_word.word)))
         comment = Comment(comment_post=post, comment_text=comment_text, comment_user=request.user)
         comment.save()
 
@@ -191,9 +204,7 @@ def post_comment(request, post_id):
     else:
         return HttpResponse("Request method is not a GET")
 
-
 #####################################################
-
 def like_post(request):
     if request.method == 'GET':
         post_id = request.GET['post_id']
@@ -235,17 +246,11 @@ def like_post(request):
 
     else:
         return HttpResponse("Request method is not a GET")
-
-
 #####################################################
-
 def logout_view(request):
     logout(request)
     return redirect(request.META['HTTP_REFERER'])
-
-
 #####################################################
-
 def is_supped(request,cat_id):
     try:
         CategorySubscribtion.objects.get(subscribed_user=request.user,
@@ -253,25 +258,17 @@ def is_supped(request,cat_id):
         return True
     except:
         return False
-
 #####################################################
-
 def like_view(request,post_id):
     pid=Post.objects.get(id=post_id)
     Like.objects.create(like_post=pid,like_user=request.user)
     return JsonResponse({"state":True,"safe":False})
-
-
 #####################################################
-
 def unlike_view(request,post_id):
     pid=Post.objects.get(id=post_id)
     Like.objects.filter(like_post=pid,like_user=request.user).delete()
     return JsonResponse({"state": True, "safe": False})
-
-
 #####################################################
-
 def dislike_view(request,post_id):
     pid=Post.objects.get(id=post_id)
     Dislike.objects.create(dislike_user=request.user,dislike_post=pid)
@@ -280,25 +277,19 @@ def dislike_view(request,post_id):
     if count == 10:
         Post.objects.get(id=post_id).delete()
     return JsonResponse({"state": True, "safe": False})
-
-
 #####################################################
-
-
 def undislike_view(request,post_id):
     pid=Post.objects.get(id=post_id)
     Dislike.objects.filter(dislike_user_id=request.user,dislike_post_id=pid).delete()
     return JsonResponse({"state": True, "safe": False})
-
-
 #####################################################
-
-
 def search_view(request,searchengine):
         result = Post.objects.filter(post_title__contains=searchengine)
         return JsonResponse(serializers.serialize('json',result),safe=False)
-
 #####################################################
-
 # def error_404(request):
 #     return render(request, "error404.html")
+######################################################
+def logout_view(request):
+	logout(request)
+	return render(request,'home.html')
