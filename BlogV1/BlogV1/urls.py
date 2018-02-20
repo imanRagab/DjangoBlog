@@ -22,7 +22,7 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^ourblog/', include('posts_app.urls')),
-    url(r'^ourblog/admin/', include('admin_app.urls')),
+    url(r'^ourblog/', include('admin_app.urls')),
 ]
 
 handler404 = 'posts_app.views.error_404'

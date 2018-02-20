@@ -18,7 +18,7 @@
               <a href=""></a>
             </div>
             <ul>
-                <li><a href="/ourblog/admin/dashboard" id="targeted">dashboard</a></li>
+                <li><a href="/ourblog/admin/" id="targeted">dashboard</a></li>
                 <li><a href="/ourblog/admin/all/user">users</a></li>
                 <li><a href="/ourblog/admin/all/category">categories</a></li>
                 <li><a href="/ourblog/admin/all/post">posts</a></li>
@@ -33,7 +33,7 @@
           </div>
           <div class="main">
             <ul class="topbar clearfix">
-                {% if model == "post" or model == "category" or model == "forbidden"%}
+                {% if model == "post" or model == "category" or model == "forbidden" or model == "tag"%}
                     <li><a href="/ourblog/admin/add/{{model}}"><button type="button" class="btn-sm btn-success" data-toggle="tooltip" data-placement="top" title="Add new {{model}}">+</button></a></li>
                     <li><b href="#"></b></li>
                     <li><a href="/ourblog/logout"><button class="btn-sm btn-dark">Logout</button></a></li>

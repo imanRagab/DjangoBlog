@@ -32,20 +32,19 @@
                   <h1 class="card-title">{{post.post_title}}</h1>
                   <h4>{{post.post_author}}</h4>
                   <p class="card-text">{{post.post_content}}</p>
-                  <span class="text-warning">&#9733; &#9733; &#9733; &#9733; &#9734;</span>
                   {% for tag in tags %}
                         {{tag}}
                     {% endfor %}
                     <span class="pull-right">
                         {% if user.is_authenticated %}
 
-                            &nbsp;&nbsp;<a class="btn btn-success btn-md" id="likeBtn" postId={{post.id}}>Like{{likes_count}}</a>
-                            &nbsp;&nbsp;<a class="btn btn-danger btn-md" id="dislikeBtn" postId={{post.id}}>Dislike{{dislikes_count}}</a>
+                        &nbsp;&nbsp;<span>{{likes}}</span><a class="btn btn-success btn-md" id="likeBtn" postId={{post.id}}>Like</a>
+                            &nbsp;&nbsp;<span>{{dislikes}}</span><a class="btn btn-danger btn-md" id="dislikeBtn" postId={{post.id}}>Dislike</a>
 
                         {% else %}
 
-                            &nbsp;<span>{{likes_count}}&nbsp;<img src="{% static 'images/icons/Like-icon.png' %}"></span>
-                            &nbsp;<span>{{dislikes_count}}&nbsp;<img src="{% static 'images/icons/Unlike-icon.png' %}"></span>
+                            &nbsp;<span>{{likes}}&nbsp;<img src="{% static 'images/icons/Like-icon.png' %}"></span>
+                            &nbsp;<span>{{dislikes}}&nbsp;<img src="{% static 'images/icons/Unlike-icon.png' %}"></span>
 
                         {% endif %}
                     </span>
@@ -74,7 +73,7 @@
 
                                         {% if reply.reply_comment.id == comment.id%}
 
-                                            <p>{{reply}}</p>
+                                            <p>{{reply.reply_text}}</p>
                                             <small class="text-muted">Posted by {{reply.reply_user}} on {{reply.reply_created_at}}</small>
                                             <hr>
 

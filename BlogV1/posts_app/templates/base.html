@@ -79,9 +79,7 @@
 
             <li class="nav-item">
 
-                {% if user.is_authenticated %}
-
-                {% else %}
+                {% if not user.is_authenticated %}
 
                     <a class="nav-link" href="/ourblog/register" >Register</a>
 
@@ -89,7 +87,7 @@
 
                 {% if user.is_staff %}
 
-                    <a class="nav-link" href="/ourblog/admin/dashboard">Admin Panel</a>
+                    <a class="nav-link" href="/ourblog/admin/">Admin Panel</a>
 
                 {% endif %}
             </li>
