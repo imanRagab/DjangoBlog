@@ -1,108 +1,136 @@
+from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
-from posts_app.forms import UserRegForm, ReplyForm, CommentForm
+
+import time
+
+import os
+from admin_app.forms import PostForm, CategoryForm, TagForm, ForbiddenForm, UploadFileForm
+from posts_app.forms import UserRegForm
 from posts_app.models import Category, CategorySubscribtion, Post, Tag,Comment, Reply, Like, Dislike, Forbidden
 from django.contrib.auth.models import User
 
 def dashboard(request):
-    return render(request, 'admin/dashboard.html')
+    if (request.user.is_staff):
+        return render(request, 'admin/dashboard.html')
 
+    else:
+        return HttpResponseRedirect('/ourblog/login/')
 
 ########################################
 
 def all(request, model):
-    context = {}
-    if(model == "category"):
-        categories = Category.objects.all()
-        context = {'objects': categories, 'model': model}
 
-    elif(model == "post"):
-        posts = Post.objects.all()
-        context = {'objects' : posts,'model': model}
+    if(request.user.is_staff):
 
-    elif (model == "tag"):
-        tags = Tag.objects.all()
-        context = {'objects': tags,'model': model}
+        if(model == "category"):
+            objects = Category.objects.all()
 
-    elif(model == "comment"):
-        comments = Comment.objects.all()
-        context = {'objects' : comments,'model': model}
+        elif(model == "post"):
+            objects = Post.objects.all()
 
-    elif (model == "reply"):
-        replies = Reply.objects.all()
-        context = {'objects': replies,'model': model}
+        elif (model == "tag"):
+            objects = Tag.objects.all()
 
-    elif (model == "like"):
-        likes = Like.objects.all()
-        context = {'objects': likes,'model': model}
+        elif(model == "comment"):
+            objects = Comment.objects.all()
 
-    elif (model == "dislike"):
-        dislikes = Dislike.objects.all()
-        context = {'objects': dislikes,'model': model}
+        elif (model == "reply"):
+            objects = Reply.objects.all()
 
-    elif (model == "forbidden"):
-        forbidden_words = Forbidden.objects.all()
-        context = {'objects': forbidden_words,'model': model}
+        elif (model == "like"):
+            objects = Like.objects.all()
 
-    elif (model == "subscription"):
-        subscriptions = CategorySubscribtion.objects.all()
-        context = {'objects': subscriptions,'model': model}
+        elif (model == "dislike"):
+            objects = Dislike.objects.all()
 
-    elif (model == "user"):
-        users = User.objects.all()
-        context = {'objects': users,'model': model}
+        elif (model == "forbidden"):
+            objects = Forbidden.objects.all()
 
-    return render(request, 'admin/all.html', context)
+        elif (model == "subscription"):
+            objects = CategorySubscribtion.objects.all()
+
+
+        elif (model == "user"):
+            objects = User.objects.all()
+
+        paginator = Paginator(objects, 10)  # Show 10 elements per page
+        if request.GET.get('page'):
+            page = request.GET.get('page')
+        else:
+            page = 1
+        page_objects = paginator.page(page)
+        context = {'objects': page_objects, 'model': model}
+
+        return render(request, 'admin/all.html', context)
+
+    else:
+        return HttpResponseRedirect('/ourblog/login/')
 
 
 #########################################################
 
 def add(request, model):
+
     if(model == "category"):
-        category_form = Category.objects.all()
-        context = {'form': category_form}
-        return render(request, 'admin/add.html', context)
+        form = CategoryForm(request.POST)
 
     elif(model == "post"):
-        post_form = Post.objects.all()
-        context = {'form' : post_form}
-        return render(request, 'admin/add.html', context)
-
+        form = PostForm(request.POST, request.FILES or None)
+        # file_form = UploadFileForm(request.POST, request.FILES)
 
     elif (model == "forbidden"):
-        forbidden_word_form = Forbidden.objects.all()
-        context = {'form': forbidden_word_form}
-        return render(request, 'admin/add.html', context)
+        form = ForbiddenForm(request.POST)
 
     elif (model == "user"):
-        user_form = UserRegForm()
-        context = {'form': user_form}
-        return render(request, 'admin/add.html', context)
+        form = UserRegForm(request.POST)
+
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            # if file_form.is_valid():
+            #     file_dir = os.path.dirname(os.path.realpath('__file__'))
+            #     rel_path = "BlogV1/posts_app/static/images/posts_images" + time.time()
+            #     abs_file_path = os.path.join(file_dir, rel_path)
+            #     with open(abs_file_path, 'wb+') as destination:
+            #         for chunk in request.FILES['file'].chunks():
+            #             destination.write(chunk)
+
+            return HttpResponseRedirect('/ourblog/admin/all/' + model)
+
+    context = {"form": form, 'model': model}
+
+    return render(request, 'admin/add.html', context)
 
 
 ##########################################################
 
 def edit(request, model, object_id):
-    if(model == "category"):
-        category_form = Category.objects.all()
-        context = {'form': category_form}
-        return render(request, 'admin/add.html', context)
 
-    elif(model == "post"):
-        post_form = Post.objects.all()
-        context = {'form' : post_form}
-        return render(request, 'admin/add.html', context)
+    if (model == "category"):
+        object = Category.objects.get(id=object_id)
+        form = CategoryForm(request.POST or None, instance=object)
 
+    elif (model == "post"):
+        object = Post.objects.get(id=object_id)
+        form = PostForm(request.POST or None, instance=object)
 
     elif (model == "forbidden"):
-        forbidden_word_form = Forbidden.objects.all()
-        context = {'form': forbidden_word_form}
-        return render(request, 'admin/add.html', context)
+        object = Forbidden.objects.get(id=object_id)
+        form = ForbiddenForm(request.POST or None, instance=object)
 
     elif (model == "user"):
-        user_form = UserRegForm()
-        context = {'form': user_form}
-        return render(request, 'admin/add.html', context)
+        object = User.objects.get(id=object_id)
+        form = UserRegForm(request.POST or None, instance=object)
+
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/ourblog/admin/all/' + model)
+
+    context = {"form": form, 'model': model, 'object_id': object_id}
+
+    return render(request, 'admin/edit.html', context)
 
 
 ##########################################################
@@ -151,3 +179,9 @@ def make_admin(request, user_id):
     user.save()
 
     return redirect(request.META['HTTP_REFERER'])
+
+
+#########################################################
+
+# def error_404(request):
+#     return render(request, "error404")

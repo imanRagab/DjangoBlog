@@ -1,6 +1,6 @@
 from django.core import serializers
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from .forms import UserRegForm
@@ -11,41 +11,54 @@ from models import Post, Category, Comment, Tag, Reply, Like, Dislike, Forbidden
 from forms import ReplyForm, CommentForm, UserLoginForm
 import csv
 
+
+####################################################################
+
 def post(request, post_id):
+
     comment_form = CommentForm()
     reply_form = ReplyForm()
-    post = Post.objects.get(id=post_id)
-    tags = Tag.objects.filter(tag_posts__id=post_id)
-    categories = Category.objects.all()
-    comments = Comment.objects.filter(comment_post__id=post_id)
-    reg_form = UserRegForm()
-    likes = len(Like.objects.filter(like_post__id=post_id))
-    dislikes = len(Dislike.objects.filter(dislike_post__id=post_id))
-    forbidden_words = Forbidden.objects.all()
-    comments_replies = []
-
-    for comment in comments:## check comments for forbidden words
-        for forbidden_word in forbidden_words:
-            comment.comment_text = comment.comment_text.replace(forbidden_word.word, ("*" * len(forbidden_word.word)))
-        replies = Reply.objects.filter(reply_comment__id=comment.id)
-        comments_replies.append(replies)
-
-    for reply in replies:## check replies for forbidden words
-        for forbidden_word in forbidden_words:
-            reply.reply_text = reply.reply_text.replace(forbidden_word.word, ("*" * len(forbidden_word.word)))
+    try:
+        post = Post.objects.get(id=post_id)
+        tags = Tag.objects.filter(tag_posts__id=post_id)
+        categories = Category.objects.all()
+        if post:
+            comments = Comment.objects.filter(comment_post__id=post_id)
+            reg_form = UserRegForm()
+            likes = len(Like.objects.filter(like_post__id=post_id))
+            dislikes = len(Dislike.objects.filter(dislike_post__id=post_id))
+            forbidden_words = Forbidden.objects.all()
+            comments_replies = []
 
 
+            if comments:
+                for comment in comments:  ## check comments for forbidden words
+                    for forbidden_word in forbidden_words:
+                        comment.comment_text = comment.comment_text.replace(forbidden_word.word,
+                                                                            ("*" * len(forbidden_word.word)))
+                    replies = Reply.objects.filter(reply_comment__id=comment.id)
+                    comments_replies.append(replies)
 
-    context = {'post': post, 'categories': categories,
-               'comments': comments, 'replies': comments_replies,
-               'comment_form': comment_form,
-               'reply_form': reply_form,
-               'likes': likes,
-               'dislikes': dislikes,
-               'tags': tags, }
+                if replies:
+
+                    for reply in replies:  ## check replies for forbidden words
+                        for forbidden_word in forbidden_words:
+                            reply.reply_text = reply.reply_text.replace(forbidden_word.word, ("*" * len(forbidden_word.word)))
+
+            context = {'post': post, 'categories': categories,
+                       'comments': comments, 'replies': comments_replies,
+                       'comment_form': comment_form,
+                       'reply_form': reply_form,
+                       'likes': likes,
+                       'dislikes': dislikes,
+                       'tags': tags, }
+
+    except Post.DoesNotExist:
+        raise Http404("Post does not exist")
 
     return render(request, 'post.html', context)
 
+##########################################################
 
 def register_view(request):
     title = "Register"
@@ -63,6 +76,8 @@ def register_view(request):
     }
     return render(request, 'register.html', context)
 
+
+####################################################
 
 def login_view(request):
     login_form = UserLoginForm(request.POST or None)
@@ -84,6 +99,8 @@ def login_view(request):
     return render(request, 'login.html', context)
 
 
+#####################################################
+
 @login_required
 def logged_in_only(request):
     return HttpResponse("you are authenticated")
@@ -96,6 +113,8 @@ def logged_in_only(request):
     return render(request, 'post.html', context)
 
 
+#####################################################
+
 def home(request):
     categories = Category.objects.all()
     retCats = []
@@ -106,6 +125,8 @@ def home(request):
 
     return render(request, 'home.html', context)
 
+
+#####################################################
 
 def category(request, cat_id):
     categories = Category.objects.all()
@@ -131,6 +152,8 @@ def category(request, cat_id):
     return render(request, 'category.html', context)
 
 
+#####################################################
+
 def comment_reply(request, post_id, comment_id):
     if request.method == 'GET':
         reply_text = request.GET['reply_text']
@@ -148,6 +171,8 @@ def comment_reply(request, post_id, comment_id):
     else:
         return HttpResponse("Request method is not a GET")
 
+
+#####################################################
 
 def post_comment(request, post_id):
     if request.method == 'GET':
@@ -167,6 +192,8 @@ def post_comment(request, post_id):
         return HttpResponse("Request method is not a GET")
 
 
+#####################################################
+
 def like_post(request):
     if request.method == 'GET':
         post_id = request.GET['post_id']
@@ -181,10 +208,13 @@ def like_post(request):
 
 
 
+#####################################################
+
 def subscribe(request, cat_id, user_id):
     new_sub = CategorySubscribtion.objects.create(subscribed_category_id=cat_id, subscribed_user_id=user_id)
     return JsonResponse({'subs': True}, safe=False)
 
+#####################################################
 
 def unsubscribe(request, cat_id, user_id):
     un_sub = CategorySubscribtion.objects.get(subscribed_category_id=cat_id, subscribed_user_id=user_id)
@@ -192,6 +222,8 @@ def unsubscribe(request, cat_id, user_id):
     return JsonResponse({'unsubs': True}, safe=False)
 
 
+#####################################################
+
 def like_post(request):
     if request.method == 'GET':
         post_id = request.GET['post_id']
@@ -205,10 +237,14 @@ def like_post(request):
         return HttpResponse("Request method is not a GET")
 
 
+#####################################################
+
 def logout_view(request):
     logout(request)
     return redirect(request.META['HTTP_REFERER'])
 
+
+#####################################################
 
 def is_supped(request,cat_id):
     try:
@@ -218,11 +254,15 @@ def is_supped(request,cat_id):
     except:
         return False
 
+#####################################################
+
 def like_view(request,post_id):
     pid=Post.objects.get(id=post_id)
     Like.objects.create(like_post=pid,like_user=request.user)
     return JsonResponse({"state":True,"safe":False})
 
+
+#####################################################
 
 def unlike_view(request,post_id):
     pid=Post.objects.get(id=post_id)
@@ -230,6 +270,7 @@ def unlike_view(request,post_id):
     return JsonResponse({"state": True, "safe": False})
 
 
+#####################################################
 
 def dislike_view(request,post_id):
     pid=Post.objects.get(id=post_id)
@@ -241,6 +282,8 @@ def dislike_view(request,post_id):
     return JsonResponse({"state": True, "safe": False})
 
 
+#####################################################
+
 
 def undislike_view(request,post_id):
     pid=Post.objects.get(id=post_id)
@@ -248,8 +291,14 @@ def undislike_view(request,post_id):
     return JsonResponse({"state": True, "safe": False})
 
 
+#####################################################
+
 
 def search_view(request,searchengine):
         result = Post.objects.filter(post_title__contains=searchengine)
         return JsonResponse(serializers.serialize('json',result),safe=False)
 
+#####################################################
+
+# def error_404(request):
+#     return render(request, "error404.html")

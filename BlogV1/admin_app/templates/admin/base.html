@@ -8,7 +8,6 @@
             <link rel="stylesheet" type="text/css" href="{% static 'styles/bootstrap.min.css' %}"/>
             <link rel="stylesheet" type="text/css" href="{% static 'styles/style.css' %}"/>
             <link rel="stylesheet" type="text/css" href="{% static 'styles/sb-admin-2.css' %}"/>
-            <link rel="stylesheet" type="text/css" href="{% static 'styles/font-awesome.min.css' %}"/>
 
     </head>
     <body>
@@ -19,24 +18,32 @@
               <a href=""></a>
             </div>
             <ul>
-                <li><a href="/admin/dashboard" id="targeted">dashboard</a></li>
-                <li><a href="/admin/all/user">users</a></li>
-                <li><a href="/admin/all/category">categories</a></li>
-                <li><a href="/admin/all/subscription">subscription</a></li>
-                <li><a href="/admin/all/post">posts</a></li>
-                <li><a href="/admin/all/tag">tags</a></li>
-                <li><a href="/admin/all/comment">comments</a></li>
-                <li><a href="/admin/all/reply">replies</a></li>
-                <li><a href="/admin/all/like">likes</a></li>
-                <li><a href="/admin/all/dislike">dislikes</a></li>
-                <li><a href="/admin/all/forbidden">forbidden words</a></li>
+                <li><a href="/ourblog/admin/dashboard" id="targeted">dashboard</a></li>
+                <li><a href="/ourblog/admin/all/user">users</a></li>
+                <li><a href="/ourblog/admin/all/category">categories</a></li>
+                <li><a href="/ourblog/admin/all/post">posts</a></li>
+                <li><a href="/ourblog/admin/all/forbidden">forbidden words</a></li>
+                <li><a href="/ourblog/admin/all/subscription">subscription</a></li>
+                <li><a href="/ourblog/admin/all/tag">tags</a></li>
+                <li><a href="/ourblog/admin/all/comment">comments</a></li>
+                <li><a href="/ourblog/admin/all/reply">replies</a></li>
+                <li><a href="/ourblog/admin/all/like">likes</a></li>
+                <li><a href="/ourblog/admin/all/dislike">dislikes</a></li>
             </ul>
           </div>
           <div class="main">
             <ul class="topbar clearfix">
                 {% if model == "post" or model == "category" or model == "forbidden"%}
-              <li><a href="/admin/add/{{model}}"><button type="button" class="btn-sm btn-success">+</button></a></li>
+                    <li><a href="/ourblog/admin/add/{{model}}"><button type="button" class="btn-sm btn-success" data-toggle="tooltip" data-placement="top" title="Add new {{model}}">+</button></a></li>
+                    <li><b href="#"></b></li>
+                    <li><a href="/ourblog/logout"><button class="btn-sm btn-dark">Logout</button></a></li>
+                {% else %}
+                    <li><b href="#"></b></li>
+                    <li><a href="/ourblog/logout"><button class="btn-sm btn-dark">Logout</button></a></li>
+
                 {% endif %}
+
+
             </ul>
             <div class="container-fluid">
 
@@ -47,6 +54,10 @@
 
     <script src="{% static 'scripts/jquery.min.js' %}"></script>
     <script src="{% static 'scripts/bootstrap.bundle.min.js' %}"></script>
+    <script>$(function () {
+          $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
 
 
     </body>

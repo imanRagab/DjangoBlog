@@ -15,7 +15,7 @@ class Post(models.Model):
     post_title = models.CharField(max_length=255)
     post_content = models.TextField()
     post_category = models.ForeignKey(Category)
-    post_picture = models.CharField(max_length=255)
+    post_picture = models.FileField(null=True, blank=True)
     post_author = models.CharField(max_length=255, default=None)
     post_created_at = models.DateTimeField(auto_now_add=True, blank=True)
 

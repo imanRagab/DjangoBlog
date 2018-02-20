@@ -9,14 +9,15 @@
 
         {% block content %}
 
-          <center><form method="post" action="/ourblog/admin/add/{{model}}" enctype="multipart/form-data">{% csrf_token %}
+        <center style="margin:100px;"><form method="post" action="/ourblog/admin/edit/{{model}}/{{object_id}}">{% csrf_token %}
 
 
-            {{form.as_p}}
+                    {{form.as_p}}
+
 
               <br><br><button class="btn-sm btn-success" type="submit">Save</button>
 
-          </form></center>
+        </form></center>
 
         {% endblock %}
 

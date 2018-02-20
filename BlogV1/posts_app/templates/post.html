@@ -23,10 +23,11 @@
 
         {% block main_block %}
 
+
             {% load staticfiles %}
 
             <div class="card mt-4">
-                <img class="card-img-top img-fluid" src="{% static post.post_picture %}" alt="">
+                <img class="card-img-top img-fluid" src="{{post.post_picture.url}}" alt="">
                 <div class="card-body">
                   <h1 class="card-title">{{post.post_title}}</h1>
                   <h4>{{post.post_author}}</h4>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% extends "admin/base.html" %}
+
     <html lang="en">
     <head>
 
@@ -9,23 +10,27 @@
 
         {% block content %}
 
-
-
-
             <table class="table table-sm table-">
 
               <thead>
                 <tr>
                   <th scope="col">#</th>
                   <th scope="col">{{model}}</th>
-                    {% if model == "post" or model == "category" or model == "forbidden" or model == "user" %}
+
+                    {% if model == "post" or model == "category" or model == "forbidden"%}
+
                       <th scope="col">Edit</th>
                       <th scope="col">Delete</th>
-                        {% if model == "user" %}
-                            <th scope="col">Admin-status</th>
-                          <th scope="col">Active-status</th>
-                        {% endif %}
+
                     {% endif %}
+
+                    {% if model == "user" %}
+
+                        <th scope="col">Admin-status</th>
+                        <th scope="col">Active-status</th>
+
+                    {% endif %}
+
                 </tr>
               </thead>
 
@@ -35,8 +40,8 @@
 
                {% if object.is_staff %}
 
-
                     <tr class="table-danger">
+
                 {% else %}
 
                     <tr>
@@ -45,9 +50,12 @@
 
                   <th scope="row"></th>
                       <td>{{object}}</td>
-                  {% if model == "post" or model == "category" or model == "forbidden" or model == "user" %}
-                      <td><a href="/admin/edit/{{model}}/{{object.id}}"><button type="button" class="btn btn-info btn-circle">||</button></a></td>
-                      <td><a href="/admin/delete/{{model}}/{{object.id}}"><button type="button" class="btn btn-danger btn-circle">X</button></a></td>
+
+                  {% if model == "post" or model == "category" or model == "forbidden" %}
+
+                      <td><a href="/ourblog/admin/edit/{{model}}/{{object.id}}"><button type="button" class="btn btn-info btn-circle">||</button></a></td>
+                      <td><a href="/ourblog/admin/delete/{{model}}/{{object.id}}"><button type="button" class="btn btn-danger btn-circle">X</button></a></td>
+
                   {% endif %}
 
                   {% if model == "user" %}
@@ -56,13 +64,14 @@
 
                         {% if object.is_active %}
 
-                            <td><a href="/admin/user/makeadmin/{{object.id}}"><button type="button" class="btn btn-success btn-circle">✔</button></a></td>
+                            <td><a href="/ourblog/admin/user/makeadmin/{{object.id}}"><button type="button" class="btn btn-success btn-circle" data-toggle="tooltip" data-placement="top" title="make admin">✔</button></a></td>
 
-                            <td><a href="/admin/user/block/{{object.id}}"><button type="button" class="btn btn-success btn-circle">☑</button></a></td>
+                            <td><a href="/ourblog/admin/user/block/{{object.id}}"><button type="button" class="btn btn-success btn-circle" data-toggle="tooltip" data-placement="top" title="block">☑</button></a></td>
 
                         {% else %}
+
                             <td></td>
-                            <td><a href="/admin/user/unblock/{{object.id}}"><button type="button" class="btn btn-danger btn-circle">⛔</button></a></td>
+                            <td><a href="/ourblog/admin/user/unblock/{{object.id}}"><button type="button" class="btn btn-danger btn-circle" data-toggle="tooltip" data-placement="top" title="unblock">⛔</button></a></td>
 
                         {% endif %}
 
@@ -78,12 +87,7 @@
                   {% endif %}
 
 
-
-
-
                     </tr>
-
-
 
               {% endfor %}
 
@@ -91,9 +95,27 @@
 
             </table>
 
+            <nav>
+                <ul class="pagination">
+
+                    <span class="current">
+                        Page {{ objects.number }} of {{ objects.paginator.num_pages }}. &nbsp;&nbsp;
+                    </span>
+
+                    {% if objects.has_previous %}
+                        <li class="page-item"><a href="?page=1" class="page-link">&laquo; first</a></li>
+                        <li class="page-item"><a href="?page={{ page_posts.previous_page_number }}" class="page-link">previous</a></li>
+                    {% endif %}
+
+                    {% if objects.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page={{ objects.next_page_number }}">next</a></li>
+                        <li class="page-item"><a class="page-link" href="?page={{ objects.paginator.num_pages }}">last &raquo;</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+
 
         {% endblock %}
-
 
     </body>
 </html>
