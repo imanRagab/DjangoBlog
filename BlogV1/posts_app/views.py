@@ -29,7 +29,7 @@ def post(request, post_id):
     try:
         Like.objects.get(like_user=request.user, like_post=post)
         like_state = True
-    
+
     except:
         like_state = False
 
@@ -58,7 +58,8 @@ def post(request, post_id):
                'likes': likes,
                'dislikes': dislikes,
                'tags': tags,
-                'like_state' : like_state
+                'like_state' : like_state,
+               'dislike_state': dislike_state,
                }
 
     return render(request, 'post.html', context)
