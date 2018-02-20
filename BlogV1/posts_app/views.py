@@ -217,6 +217,7 @@ def dislike_view(request,post_id):
     print count
     if count == 10:
         Post.objects.get(id=post_id).delete()
+        return HttpResponseRedirect('/ourblog/home/')
     return JsonResponse({"state": True, "safe": False})
 
 
