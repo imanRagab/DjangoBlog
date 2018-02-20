@@ -1,4 +1,6 @@
 from django.core import serializers
+from forms import UserLoginForm
+from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
@@ -52,25 +54,32 @@ def register_view(request):
         "title": title
     }
     return render(request, 'register.html', context)
-
-
+# def login_view(request):
+#     if request.method == 'POST':
+#         username = request.POST['username']
+#         password = request.POST['password']
+#         user = authenticate(username=username, password=password)
+#         if user is not None:
+#             if user.is_active:
+#                 login(request, user)
+#                 return render(request, 'home.html')
+#             else:
+#                 return HttpResponse("Your account has been blocked please contact the admin")
+#
+#         else:
+#             return render(request, 'login.html')
+#
+#     return render(request, 'login.html')
 def login_view(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                return render(request, 'home.html')
-            else:
-                return HttpResponse("Your account has been blocked please contact the admin")
+    form = UserLoginForm(request.POST or None)
+    if form.is_valid():
+        username=form.cleaned_data.get("username")
+        password = form.cleaned_data.get("password")
+        user=authenticate(username=username , password=password)
+        login(request,user)
+        return render(request,"home.html",{"form":form})
 
-        else:
-            return render(request, 'login.html')
-
-    return render(request, 'login.html')
-
+    return render(request,"login.html")
 
 @login_required
 def logged_in_only(request):
@@ -82,7 +91,6 @@ def logged_in_only(request):
                'tags': tags}
 
     return render(request, 'post.html', context)
-
 
 def home(request):
     categories = Category.objects.all()
@@ -232,6 +240,7 @@ def dislike_view(request,post_id):
     print count
     if count == 10:
         Post.objects.get(id=post_id).delete()
+        #
     return JsonResponse({"state": True, "safe": False})
 
 

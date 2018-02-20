@@ -6,22 +6,23 @@
 </head>
 <body>
 
-<form method="POST">
+    {% if form.errors %}
+        <p>Your username and password didn't match. Please try again.</p>
+    {% endif %}
+    <form method="POST">
 
-    {% csrf_token %}
+        {% csrf_token %}
+        <b>Username:</b>
+        <input type="text" name="username">
+        <br><br>
 
-    <b>Username:</b>
-    <input type="text" name="username">
-    <br><br>
+        <b>Password:</b>
+        <input type="password" name="password">
+        <br><br>
 
-    <b>Password:</b>
-    <input type="password" name="password">
-    <br><br>
+        <input type="submit" value="Login">
 
-    <input type="submit" value="Login">
-
-</form>
-
+    </form>
 
 </body>
 </html>
