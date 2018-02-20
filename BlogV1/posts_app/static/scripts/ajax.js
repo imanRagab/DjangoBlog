@@ -48,7 +48,7 @@ $(function(){
 
                     },
             error: function (error) {
-                alert(error);
+
                 }
                 });
 
@@ -68,24 +68,10 @@ $(function(){
 
                     },
             error: function (error) {
-                alert(error);
                 }
                 });
          }
-        $.ajax({
 
-            url: '/ourblog/likepost',
-            type: 'get',
-            data: {
-                post_id: $(this).attr("postId")
-            },
-
-            success: function(resp){
-
-            
-            }
-
-        });
 
     });
 
@@ -106,13 +92,18 @@ $(function(){
         data: {
             post_id: $(thiss).attr("postId")
         },
-        success: function(reponse){
-           console.log(reponse)
-                alert("disliked!")
+        success: function(response){
+             alert("disliked!")
+                console.log(response)
+           response=JSON.parse(response)
+           count=response.count
+           if (count == 10){
+                 $("#exampleModal").modal('show');
+           }
+
         },
         error: function (error) {
 
-                alert(error);
                 }
         });
 
@@ -135,15 +126,12 @@ $(function(){
                             alert("un-disliked!")
                     },
                 error: function (error) {
-                            alert(error);
                             }
                     });
             }
 
 
     });
-
-
 
 
     $("#loginForm").submit(function(){
@@ -159,45 +147,31 @@ $(function(){
         });
     });
 
+    $("#search").on("keyup",function(){
+                    searchlist = $("#searchlist");
+                $.ajax({
+                    url: 'http://127.0.0.1:8000/ourblog/search/'+$(this).val(),
+                    type: 'get',
+                    success: function(response){
+                        data = JSON.parse(response);
+                        console.log(data);
+
+                    searchlist.html("");
+                        $(data).each(function(){
+                            searchlist.append(searchItem(this));
+                        });
+                    },
+                    error:function(){
+                    searchlist.html("");
+                    },
+            });
+    });
 
 
-
-$("#search").on("keyup",function(){
-                searchlist = $("#searchlist");
-            $.ajax({
-                url: 'http://127.0.0.1:8000/ourblog/search/'+$(this).val(),
-                type: 'get',
-                success: function(response){
-                    data = JSON.parse(response);
-                    console.log(data);
-
-                searchlist.html("");
-                    $(data).each(function(){
-                        searchlist.append(searchItem(this));
-                    });
-                },
-                error:function(){
-                searchlist.html("");
-                },
-        });
-});
-
-
-
-function searchItem(PostData){
-    console.log(PostData);
-    return $('<li class="searchitem"><a href="http://127.0.0.1:8000/ourblog/post/'+PostData.pk+'">'+PostData.fields.post_title+'</a></li>');
-}
-
-//
-//$("label").each(function(){
-//
-//
-//    $(this).css("color","#007bff")
-//
-//
-//})
-
+    function searchItem(PostData){
+        console.log(PostData);
+        return $('<li class="searchitem"><a href="http://127.0.0.1:8000/ourblog/post/'+PostData.pk+'">'+PostData.fields.post_title+'</a></li>');
+    }
 
 
 });

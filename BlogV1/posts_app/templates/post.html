@@ -25,6 +25,37 @@
 
             {% load staticfiles %}
 
+
+                    <div class="modal fade" id="exampleModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Alert !</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    This post has 10 disLikes then will be delete <span>Thanks for attention</span>
+                </div>
+                <div class="modal-footer">
+
+                    <form method="POST" class="confirm" action="/ourblog/delete/{{ post.id }}/">
+                        {% csrf_token %}
+                        <input type="submit" name="delete" class="btn btn-danger" data-toggle="modal"
+                               data-target="#myModal" value="Delete">
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
             <div class="card mt-4">
 
 
@@ -52,8 +83,29 @@
 
                                 <!--<img src="{% static 'images/icons/thumb-up.svg'  %}"> -->
                                 <!--<img src="{% static 'images/icons/thumb-down.svg' %}">-->
-                            <button class="btn btn-success btn-sm" id="likeBtn" postId="{{post.id}}">Like</button>
-                            <button class="btn btn-danger btn-sm" id="dislikeBtn" postId="{{post.id}}">Dislike</button>
+                            <!--<button class="btn btn-success btn-sm" id="likeBtn" postId="{{post.id}}">Like</button>-->
+
+                        {% if like_state %}
+                              <button class="btn btn-success btn-sm" id="likeBtn" postId="{{post.id}}">Unlike</button>
+                         <button class="btn btn-danger btn-sm" id="dislikeBtn" postId="{{post.id}}" disabled>Dislike</button>
+
+                        {% elif dislike_state %}
+
+                        <button class="btn btn-success btn-sm" id="likeBtn" postId="{{post.id}}" disabled>Like</button>
+                         <button class="btn btn-danger btn-sm" id="dislikeBtn" postId="{{post.id}}" >Undislike</button>
+
+                        {% else  %}
+                           <button class="btn btn-success btn-sm" id="likeBtn" postId="{{post.id}}">Like</button>
+                           <button class="btn btn-danger btn-sm" id="dislikeBtn" postId="{{post.id}}">Dislike</button>
+
+                            {% endif %}
+
+
+
+
+
+
+                            <!--<button class="btn btn-danger btn-sm" id="dislikeBtn" postId="{{post.id}}">Dislike</button>-->
 
                         {% endif %}
                     </span>

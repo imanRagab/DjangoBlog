@@ -2,6 +2,7 @@ from django.core import serializers
 from django.http import HttpResponse
 from django.shortcuts import render
 from models import Post, Category, Comment, Tag, Reply ,Like
+import json
 
 from django.http import JsonResponse
 
@@ -22,6 +23,23 @@ def post(request, post_id):
     comment_form = CommentForm()
     reply_form = ReplyForm()
     post = Post.objects.get(id=post_id)
+    dislike_state = None
+    like_state = None
+
+    try:
+        Like.objects.get(like_user=request.user, like_post=post)
+        like_state = True
+    
+    except:
+        like_state = False
+
+    try:
+        Dislike.objects.get(dislike_user=request.user,dislike_post=post)
+        dislike_state= True
+
+    except:
+        dislike_state = False
+
     tags = Tag.objects.filter(tag_posts__id=post_id)
     categories = Category.objects.all()
     comments = Comment.objects.filter(comment_post__id=post_id)
@@ -39,7 +57,9 @@ def post(request, post_id):
                'reply_form': reply_form,
                'likes': likes,
                'dislikes': dislikes,
-               'tags': tags, }
+               'tags': tags,
+                'like_state' : like_state
+               }
 
     return render(request, 'post.html', context)
 
@@ -197,6 +217,9 @@ def logout_view(request):
 	return redirect(request.META['HTTP_REFERER'])
 
 
+
+
+
 def like_view(request,post_id):
     pid=Post.objects.get(id=post_id)
     Like.objects.create(like_post=pid,like_user=request.user)
@@ -215,17 +238,24 @@ def dislike_view(request,post_id):
     Dislike.objects.create(dislike_user=request.user,dislike_post=pid)
     count = Dislike.objects.all().count()
     print count
-    if count == 10:
-        Post.objects.get(id=post_id).delete()
-        return HttpResponseRedirect('/ourblog/home/')
-    return JsonResponse({"state": True, "safe": False})
+    # if count == 10:
+    #     Post.objects.get(id=post_id).delete()
+        #return HttpResponseRedirect('/ourblog/home/')
+    data = json.dumps({'count': count, 'state': True})
+    return JsonResponse(data, safe=False)
 
+
+
+def delete_view(request,post_id):
+    Post.objects.get(id=post_id).delete()
+    return HttpResponseRedirect('/ourblog/home')
 
 
 def undislike_view(request,post_id):
     pid=Post.objects.get(id=post_id)
     Dislike.objects.filter(dislike_user_id=request.user,dislike_post_id=pid).delete()
     return JsonResponse({"state": True, "safe": False})
+
 
 
 
