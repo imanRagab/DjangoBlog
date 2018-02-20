@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from models import Post, Category, Comment, Tag, Reply
 from django.contrib.auth.models import User
-from .forms import UserRegForm ,UserLoginForm
+from forms import UserRegForm ,UserLoginForm
 from django.contrib.auth import authenticate, login , logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
@@ -54,15 +54,24 @@ def register_view(request):
 
 ############################################
 
-def user_login(request):
-    form=UserLoginForm(request.POST or None)
-    if forms.is_valid():
+def login_view(request):
+    form = UserLoginForm(request.POST or None)
+    context = {'form': form}
+    if form.is_valid():
         username=form.cleaned_data.get("username")
         password = form.cleaned_data.get("password")
         user=authenticate(username=username , password=password)
-        login(request,user)
-        return render(request,"login.html",{"form":form})
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return render(request, 'home.html')
+            else:
+                return HttpResponse("Your account has been blocked please contact the admin")
 
+    else:
+        return render(request, 'login.html', context)
+
+    return render(request, 'login.html', context)
 
 
 #def login_view(request):
@@ -80,8 +89,7 @@ def user_login(request):
 #        else:
 #            return render(request, 'login.html')
 
- #   return render(request, 'login.html')
-
+#   return render(request, 'login.html')
 
 #################################################
 

@@ -1,6 +1,6 @@
 from django.db import models
 
-from posts_app.models import Post
+from posts_app.models import Post , Category
 
 
 

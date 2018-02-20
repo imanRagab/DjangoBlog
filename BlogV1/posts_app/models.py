@@ -23,7 +23,6 @@ class Post(models.Model):
         return self.post_title
 
 
-
 class Comment(models.Model):
     comment_text = models.TextField()
     comment_user = models.ForeignKey(User, blank=True)
@@ -60,6 +59,7 @@ class Like(models.Model):
     def __str__(self):
         return self.like_user.username + " likes " + self.like_post.post_title
 
+
 class Dislike(models.Model):
     dislike_user = models.ForeignKey(User, default=None)
     dislike_post = models.ForeignKey(Post)
@@ -67,12 +67,14 @@ class Dislike(models.Model):
     def __str__(self):
         return self.dislike_user.username + " dislikes " + self.dislike_post.post_title
 
+
 class CategorySubscribtion(models.Model):
     subscribed_category = models.ForeignKey(Category)
     subscribed_user = models.ForeignKey(User, default=None)
 
     def __str__(self):
         return self.subscribed_user.username + " has subscribed to " + self.subscribed_category.category_name
+
 
 class Forbidden(models.Model):
     word = models.CharField(max_length=255)

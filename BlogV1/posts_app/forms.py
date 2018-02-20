@@ -2,32 +2,32 @@ from django import forms
 from models import Comment, Reply
 from django.contrib.auth import authenticate,get_user_model ,login
 from django.contrib.auth.models import User
-#from .forms import UserRegForm , UserLoginForm
 
 
 
 User=get_user_model()
 
 class UserLoginForm(forms.Form):
-    username=forms.CharField()
-    password=forms.CharField(widget=forms.PasswordInput)
-
+    username = forms.CharField(label='Username', widget=forms.TextInput)
+    password = forms.CharField(label='Password', widget=forms.PasswordInput)
 
     def clean(self, *args,**kwargs):
         username=self.cleaned_data.get("username")
         password=self.cleaned_data.get("password")
 
         if username and password:
-            User = authenticate(username=username, password=password)
-
-            if not User:
+            try:
+                authenticate(username=username, password=password)
+                user = User.objects.get(username=username)
+            except:
                 raise forms.ValidationError("this user not exist")
-            if not User.check_password(password):
-                raise forms.ValidationError("incorrect password")
-            if not user.is_active:
-                raise forms.ValidationError("Your account has been blocked please contact the admin")
 
-            return super (UserLoginForm,self).clean(*args,**kwargs)
+            if user.password != password:
+                raise forms.ValidationError("incorrect password")
+
+            return super(UserLoginForm,self).clean(*args,**kwargs)
+
+
 
 ##########################################################################
 
