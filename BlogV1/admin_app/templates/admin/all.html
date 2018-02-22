@@ -22,6 +22,15 @@
                       <th scope="col">Edit</th>
                       <th scope="col">Delete</th>
 
+
+                    {% endif %}
+
+                    {% if model == "user" and user.is_superuser %}
+
+                      <th scope="col">Edit</th>
+                      <th scope="col">Delete</th>
+
+
                     {% endif %}
 
                     {% if model == "user" %}
@@ -56,6 +65,13 @@
                       <td><a href="/ourblog/admin/edit/{{model}}/{{object.id}}"><button type="button" class="btn btn-info btn-circle">||</button></a></td>
                       <td><a href="/ourblog/admin/delete/{{model}}/{{object.id}}"><button type="button" class="btn btn-danger btn-circle">X</button></a></td>
 
+                  {% endif %}
+
+                  {% if model == "user" and user.is_superuser %}
+
+                      <td><a href="/ourblog/admin/edit/{{model}}/{{object.id}}"><button type="button" class="btn btn-info btn-circle">||</button></a></td>
+                      <td><a href="/ourblog/admin/delete/{{model}}/{{object.id}}"><button type="button" class="btn btn-danger btn-circle">X</button></a></td>
+                      
                   {% endif %}
 
                   {% if model == "user" %}

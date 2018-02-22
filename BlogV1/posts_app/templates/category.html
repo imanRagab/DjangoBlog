@@ -7,40 +7,67 @@
 </head>
 <body>
     {% block categories_block %}
+    
         {% include "cats_all.html" %}
-            {% endblock %}
 
-       {% block main_block %}
+    {% endblock %}
 
-    <div class="row">
 
-        <h1 class="col-4 header">{{ category.category_name }} </h1>
-   </div>
-        {% for post in page_posts %}
+     {% block main_block %}
 
-            <h3>{{ post.post_content }}</h3>
-
-        {% endfor %}
-    <nav>
-        <ul class="pagination">
-
-            <span class="current">
-                Page {{ page_posts.number }} of {{ page_posts.paginator.num_pages }}. &nbsp;&nbsp;
-            </span>
-
-            {% if page_posts.has_previous %}
-                <li class="page-item"><a href="?page=1" class="page-link">&laquo; first</a></li>
-                <li class="page-item"><a href="?page={{ page_posts.previous_page_number }}" class="page-link">previous</a></li>
+        <div class="row">
+          {% if user.is_authenticated %}
+            {% if sub_state %}
+              <div class="col-md-2"><a class="btn btn-danger text-light btn-md subs" data1="{{category.id}}" data2="{{ user.id }}" >UnSubscribe</a></div>
+            {% else %}
+                <div class="col-md-2"><a class="btn btn-secondary text-light btn-md subs" data1="{{category.id}}" data2="{{ user.id }}" >Subscribe</a></div>
+                <!-- <div class="col-md-2"><a class="btn btn-secondary text-light btn-md">Subscribe</a></div> -->
             {% endif %}
+          {% endif %}
 
-            {% if page_posts.has_next %}
-                <li class="page-item"><a class="page-link" href="?page={{ page_posts.next_page_number }}">next</a></li>
-                <li class="page-item"><a class="page-link" href="?page={{ page_posts.paginator.num_pages }}">last &raquo;</a></li>
-            {% endif %}
-        </ul>
+          <div class="col-md-4"><h1 class="col-4 header">{{ category.category_name }} </h1></div>
 
-    </nav>
-        {% endblock %}
+      </div>
+
+            {% for post in page_posts %}
+
+              <div class="row mb-2">
+                <div class="col-md-12">
+                  <div class="card flex-md-row mb-4 box-shadow h-md-250">
+                    <div class="card-body d-flex flex-column align-items-start">
+                        <a href="/ourblog/home/category/{{ post.post_category.id }}"><strong class="d-inline-block mb-2 text-primary">{{ post.post_category }}</strong></a>
+                        <h4 class="mb-0">
+                          <a class="text-dark" href="/ourblog/post/{{ post.id }}">{{ post.post_title }}</a>
+                        </h4>
+                        <div class="mb-1 text-muted">{{ post.post_created_at }}</div>
+                        <p class="card-text mb-auto">{{post.post_content|truncatewords:30}}</p>
+                        <a href="/ourblog/post/{{ post.id }}">Continue reading</a>
+                        </div>
+                        <img class="card-img-right flex-auto d-none d-md-block" alt="Thumbnail [200x250]"
+                        style="width: 200px; height: 250px;" src="{{post.post_picture.url}}" data-holder-rendered="true">
+                  </div>
+                </div>
+              </div>
+
+            {% endfor %}
+
+              <nav class="blog-pagination">
+
+                <span class="current">
+                    Page {{ page_posts.number }} of {{ page_posts.paginator.num_pages }}. &nbsp;&nbsp;
+                </span>
+
+                {% if page_posts.has_previous %}
+                    <a href="?page=1" class="btn btn-outline-primary">&laquo; first</a>
+                    <a href="?page={{ page_posts.previous_page_number }}" class="btn btn-outline-primary">previous</a>
+                {% endif %}
+
+                {% if page_posts.has_next %}
+                    <a class="btn btn-outline-primary" href="?page={{ page_posts.next_page_number }}">next</a>
+                    <a class="btn btn-outline-primary" href="?page={{ page_posts.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+
+              </nav>
+              {% endblock %}
 </body>
 </html>
-

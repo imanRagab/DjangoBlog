@@ -14,11 +14,30 @@
 
         <div class="container-fluid">
           <div class="slidebar">
-            <div class="logo">
-              <a href=""></a>
+            <div>
+              {% if user.is_authenticated %}
+                <!-- <span>{{user.username}}&nbsp;&nbsp;</span>
+                <a class="btn btn-sm btn-outline-secondary" href="/ourblog/logout">Logout</a> -->
+                <a class="btn btn-stripped dropdown-toggle" href="#" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    						<div class="username mt-1">
+    							<h4 class="mb-1">{{user.username}}</h4>
+                  {% if user.is_superuser %}
+                    <h6 class="text-muted">Super Admin</h6>
+                  {% else %}
+                    <h6 class="text-muted">Admin</h6>
+
+                  {% endif %}
+    						</div>
+
+    						</a>
+                <div class="dropdown-menu dropdown-menu-right" style="margin-right: 1.5rem;" aria-labelledby="dropdownMenuLink">
+    						     <a class="dropdown-item" href="/ourblog/logout"><em class="fa fa-power-off mr-1"></em> Logout</a>
+                 </div>
+
+              {% endif %}
             </div>
             <ul>
-                <li><a href="/ourblog/admin/dashboard" id="targeted">dashboard</a></li>
+                <li><a href="/ourblog/admin/" id="targeted">dashboard</a></li>
                 <li><a href="/ourblog/admin/all/user">users</a></li>
                 <li><a href="/ourblog/admin/all/category">categories</a></li>
                 <li><a href="/ourblog/admin/all/post">posts</a></li>
@@ -33,19 +52,20 @@
           </div>
           <div class="main">
             <ul class="topbar clearfix">
-                {% if model == "post" or model == "category" or model == "forbidden"%}
+                {% if model == "post" or model == "category" or model == "forbidden" or model == "tag" %}
                     <li><a href="/ourblog/admin/add/{{model}}"><button type="button" class="btn-sm btn-success" data-toggle="tooltip" data-placement="top" title="Add new {{model}}">+</button></a></li>
-                    <li><b href="#"></b></li>
-                    <li><a href="/ourblog/logout"><button class="btn-sm btn-dark">Logout</button></a></li>
-                {% else %}
-                    <li><b href="#"></b></li>
-                    <li><a href="/ourblog/logout"><button class="btn-sm btn-dark">Logout</button></a></li>
+
+                {% endif %}
+
+                {% if model == "user" and user.is_superuser %}
+
+                  <li><a href="/ourblog/admin/add/{{model}}"><button type="button" class="btn-sm btn-success" data-toggle="tooltip" data-placement="top" title="Add new {{model}}">+</button></a></li>
 
                 {% endif %}
 
 
             </ul>
-            <div class="container-fluid">
+            <div class="container">
 
                 {% block content %}{% endblock %}
              </div>

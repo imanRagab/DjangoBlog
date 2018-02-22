@@ -10,6 +10,11 @@ class Category(models.Model):
     def __str__(self):
         return self.category_name
 
+class Tag(models.Model):
+    tag_name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.tag_name
 
 class Post(models.Model):
     post_title = models.CharField(max_length=255)
@@ -18,9 +23,14 @@ class Post(models.Model):
     post_picture = models.FileField(null=True, blank=True)
     post_author = models.CharField(max_length=255, default=None)
     post_created_at = models.DateTimeField(auto_now_add=True, blank=True)
+    post_tags = models.ManyToManyField(Tag)
 
     def __str__(self):
         return self.post_title
+
+class PostsTags(models.Model):
+    tag = models.ForeignKey(Tag)
+    post = models.ForeignKey(Post)
 
 
 class Comment(models.Model):
@@ -51,14 +61,6 @@ class Reply(models.Model):
                + self.reply_comment.comment_user.username \
                + "'s comment on " \
                + self.reply_comment.comment_post.post_title
-
-
-class Tag(models.Model):
-    tag_name = models.CharField(max_length=255)
-    tag_posts = models.ManyToManyField(Post)
-
-    def __str__(self):
-        return self.tag_name
 
 
 class Like(models.Model):

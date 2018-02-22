@@ -9,15 +9,57 @@
 
         {% block content %}
 
-        <center style="margin:100px;"><form method="post" action="/ourblog/admin/edit/{{model}}/{{object_id}}">{% csrf_token %}
+            <br><form method="post" action="/ourblog/admin/edit/{{model}}/{{object_id}}" enctype="multipart/form-data">{% csrf_token %}
+
+              {% if model == "post" %}
+
+                <div class="row">
+                  <div class="col-md-1"></div>
+
+                    <div class="col-md-4">
+                      {{form.post_title}}<br>
+                      {{form.post_author}}<br>
+                      {{form.post_content}}<br>
+
+                    </div>
+
+                    <div class="col-md-1"></div>
+
+                    <div class="col-md-4">
+                      {{form.post_category}}<br><br>
+                      {{form.post_picture}}<br>
+                      {{form.post_tags}}<br><br>
 
 
-                    {{form.as_p}}
+                    </div>
+                </div>
+
+                <div class="row">
+
+                  <div class="col-md-4"></div>
+
+                    <div class="col-md-4">
+
+                      <br><button class="btn-lg btn-success" type="submit">Save</button><br>
 
 
-              <br><br><button class="btn-sm btn-success" type="submit">Save</button>
+                    </div>
+                </div>
 
-        </form></center>
+                {% else %}
+
+                  {{form.as_p}}
+
+                  <br><button class="btn-lg btn-success" type="submit">Save</button><br>
+
+                {% endif %}
+
+
+          </form>
+
+
+
+      <div class="row"></row>
 
         {% endblock %}
 

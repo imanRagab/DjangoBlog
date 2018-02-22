@@ -32,13 +32,14 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = (
     'admin_app',
     'posts_app',
+    'auth_app',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles'
-    
+
 )
 
 MIDDLEWARE_CLASSES = (
@@ -80,10 +81,10 @@ WSGI_APPLICATION = 'BlogV1.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'pythonBlog',
+        'NAME': 'ourBlogdb',
         'HOST': 'localhost',
         'USER': 'root',
-        'PASSWORD': '12345'
+        'PASSWORD': '1942'
 
 
     }

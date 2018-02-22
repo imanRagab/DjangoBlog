@@ -15,6 +15,34 @@ class PostForm(forms.ModelForm):
         #     'post_category_id',
         # )
 
+        widgets = {
+            'post_title': forms.TextInput(attrs={
+
+                'class': "form-control",
+                'placeholder': "post title"
+            }),
+
+            'post_content': forms.Textarea(attrs={
+
+                'class': "form-control",
+                'placeholder': "post content"
+            }),
+
+            'post_author': forms.TextInput(attrs={
+
+                'class': "form-control",
+                'placeholder': "post author"
+            }),
+
+        }
+
+        labels = {
+            'post_title': '',
+            'post_content': '',
+            'post_author': '',
+
+        }
+
 
 ################################################
 

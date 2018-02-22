@@ -13,7 +13,7 @@
 
             {%  for category in categories  %}
 
-                <a href="#" class="list-group-item">{{ category.category_name }}</a>
+                <a href="/ourblog/home/category/{{ category.id }}" class="list-group-item">{{ category.category_name }}</a>
 
             {%  endfor  %}
 
@@ -32,20 +32,36 @@
                   <h1 class="card-title">{{post.post_title}}</h1>
                   <h4>{{post.post_author}}</h4>
                   <p class="card-text">{{post.post_content}}</p>
-                  <span class="text-warning">&#9733; &#9733; &#9733; &#9733; &#9734;</span>
+                  <span class="text-warning">
                   {% for tag in tags %}
                         {{tag}}
                     {% endfor %}
+                    </span>
                     <span class="pull-right">
                         {% if user.is_authenticated %}
 
-                            &nbsp;&nbsp;<a class="btn btn-success btn-md" id="likeBtn" postId={{post.id}}>Like{{likes_count}}</a>
-                            &nbsp;&nbsp;<a class="btn btn-danger btn-md" id="dislikeBtn" postId={{post.id}}>Dislike{{dislikes_count}}</a>
+                          {% if like_state %}
+
+                          &nbsp;<span id="likesCount">{{likes}}</span>&nbsp;<button class="btn btn-success btn-md" id="likeBtn" postId={{post.id}}>Unlike</button>
+                          &nbsp;<span id="dislikesCount">{{dislikes}}</span>&nbsp;<button class="btn btn-danger btn-md" id="dislikeBtn" postId={{post.id}} disabled>Dislike</button>
+
+                          {% elif dislike_state %}
+
+                            &nbsp;<span id="likesCount">{{likes}}</span>&nbsp;<button class="btn btn-success btn-md" id="likeBtn" postId={{post.id}} disabled>Like</button>
+                            &nbsp;<span id="dislikesCount">{{dislikes}}</span>&nbsp;<button class="btn btn-danger btn-md" id="dislikeBtn" postId={{post.id}}>Undislike</button>
+
+
+                          {% else %}
+
+                            &nbsp;<span id="likesCount">{{likes}}</span>&nbsp;<button class="btn btn-success btn-md" id="likeBtn" postId={{post.id}}>Like</button>
+                            &nbsp;<span id="dislikesCount">{{dislikes}}</span>&nbsp;<button class="btn btn-danger btn-md" id="dislikeBtn" postId={{post.id}}>Dislike</button>
+
+                          {% endif %}
 
                         {% else %}
 
-                            &nbsp;<span>{{likes_count}}&nbsp;<img src="{% static 'images/icons/Like-icon.png' %}"></span>
-                            &nbsp;<span>{{dislikes_count}}&nbsp;<img src="{% static 'images/icons/Unlike-icon.png' %}"></span>
+                            &nbsp;{{likes}}&nbsp;<span>{{likes_count}}&nbsp;<img src="{% static 'images/icons/Like-icon.png' %}"></span>
+                            &nbsp;{{dislikes}}&nbsp;<span>{{dislikes_count}}&nbsp;<img src="{% static 'images/icons/Unlike-icon.png' %}"></span>
 
                         {% endif %}
                     </span>
@@ -74,7 +90,7 @@
 
                                         {% if reply.reply_comment.id == comment.id%}
 
-                                            <p>{{reply}}</p>
+                                            <p>{{reply.reply_text}}</p>
                                             <small class="text-muted">Posted by {{reply.reply_user}} on {{reply.reply_created_at}}</small>
                                             <hr>
 

@@ -2,15 +2,9 @@ from django.core import serializers
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse, Http404
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
-from .forms import UserRegForm
-from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
-from models import Post, Category, Comment, Tag, Reply, Like, Dislike, Forbidden, CategorySubscribtion
-from forms import ReplyForm, CommentForm, UserLoginForm
-import csv
-
+from models import Post, Category, Comment, Tag, Reply, Like, Dislike, Forbidden, CategorySubscribtion, PostsTags
+from forms import ReplyForm, CommentForm
 
 ####################################################################
 
@@ -20,15 +14,21 @@ def post(request, post_id):
     reply_form = ReplyForm()
     try:
         post = Post.objects.get(id=post_id)
-        tags = Tag.objects.filter(tag_posts__id=post_id)
+        tags = PostsTags.objects.filter(post=post_id)
+        post_tags = []
         categories = Category.objects.all()
         if post:
             comments = Comment.objects.filter(comment_post__id=post_id)
-            reg_form = UserRegForm()
             likes = len(Like.objects.filter(like_post__id=post_id))
             dislikes = len(Dislike.objects.filter(dislike_post__id=post_id))
+            like_state = is_liked(request, post_id)
+            dislike_state = is_disliked(request, post_id)
             forbidden_words = Forbidden.objects.all()
             comments_replies = []
+
+            if tags:
+                for tag in tags:
+                    post_tags.append(Tag.objects.get(id=tag.id))
 
 
             if comments:
@@ -51,77 +51,31 @@ def post(request, post_id):
                        'reply_form': reply_form,
                        'likes': likes,
                        'dislikes': dislikes,
-                       'tags': tags, }
+                       'tags': post_tags,
+                       'like_state': like_state,
+                       'dislike_state': dislike_state}
 
     except Post.DoesNotExist:
         raise Http404("Post does not exist")
 
     return render(request, 'post.html', context)
 
-##########################################################
-
-def register_view(request):
-    title = "Register"
-    form = UserRegForm(request.POST or None)
-    if form.is_valid():
-        user = form.save(commit=False)
-        password = form.cleaned_data.get('password')
-        user.set_password(password)
-        user.save()
-        return HttpResponseRedirect('/ourblog/home')
-
-    context = {
-        "form": form,
-        "title": title
-    }
-    return render(request, 'register.html', context)
-
-
-####################################################
-
-def login_view(request):
-    login_form = UserLoginForm(request.POST or None)
-    context = {'login_form': login_form}
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                return render(request, 'home.html')
-            else:
-                return HttpResponse("Your account has been blocked please contact the admin")
-
-        else:
-            return render(request, 'login.html', context)
-
-    return render(request, 'login.html', context)
-
-
-#####################################################
-
-@login_required
-def logged_in_only(request):
-    return HttpResponse("you are authenticated")
-    context = {'post': post, 'categories': categories,
-               'comments': comments, 'replies': comments_replies,
-               'comment_form': comment_form,
-               'reply_form': reply_form,
-               'tags': tags}
-
-    return render(request, 'post.html', context)
-
-
-#####################################################
+######################################################
 
 def home(request):
     categories = Category.objects.all()
+    posts = Post.objects.order_by('-post_created_at')
+    paginator = Paginator(posts, 10)  # Show 10 posts per page
+    if request.GET.get('page'):
+        page = request.GET.get('page')
+    else:
+        page = 1
+    page_posts = paginator.page(page)
     retCats = []
     for cat in categories:
         retCats.append({"state": is_supped(request, cat.id), "cat": cat})
-    posts_all = Post.objects.all()
-    context = {'categories': retCats, 'posts_all': posts_all, 'Like': Like, 'Dislike': Dislike}
+    # posts_all = Post.objects.order_by('post_created_at')
+    context = {'categories': retCats, 'page_posts': page_posts, 'Like': Like, 'Dislike': Dislike}
 
     return render(request, 'home.html', context)
 
@@ -134,12 +88,12 @@ def category(request, cat_id):
     retCats = []
     for cat in categories:
         retCats.append({"state": is_supped(request, cat.id), "cat": cat})
-    #     retCats.append({"state":is_supped(request,cat.id),"cat":serializers.serialize('json',[cat])})
+        # retCats.append({"state":is_supped(request,cat.id),"cat":serializers.serialize('json',[cat])})
     # return JsonResponse(retCats, safe=False)
-
+    sub_state = is_supped(request, cat_id)
     # return HttpResponse(category)
     cat_posts = Post.objects.filter(post_category__id=cat_id)
-    paginator = Paginator(cat_posts, 2)  # Show 25 contacts per page
+    paginator = Paginator(cat_posts, 10)  # Show 10 posts per page
     if request.GET.get('page'):
         page = request.GET.get('page')
     else:
@@ -147,7 +101,7 @@ def category(request, cat_id):
     page_posts = paginator.page(page)
 
     # cat_post = map(lambda x : x, cat_posts)
-    context = {'category': category, 'categories': retCats, 'page_posts': page_posts}
+    context = {'category': category, 'sub_state': sub_state, 'categories':retCats,'page_posts': page_posts}
 
     return render(request, 'category.html', context)
 
@@ -194,22 +148,6 @@ def post_comment(request, post_id):
 
 #####################################################
 
-def like_post(request):
-    if request.method == 'GET':
-        post_id = request.GET['post_id']
-        post = Post.objects.get(pk=post_id)
-        like = Like(like_post=post, like_user=request.user)
-        like.save()
-
-        return HttpResponseRedirect('/ourblog/post/' + post_id)
-
-    else:
-        return HttpResponse("Request method is not a GET")
-
-
-
-#####################################################
-
 def subscribe(request, cat_id, user_id):
     new_sub = CategorySubscribtion.objects.create(subscribed_category_id=cat_id, subscribed_user_id=user_id)
     return JsonResponse({'subs': True}, safe=False)
@@ -221,38 +159,6 @@ def unsubscribe(request, cat_id, user_id):
     un_sub.delete()
     return JsonResponse({'unsubs': True}, safe=False)
 
-
-#####################################################
-
-def like_post(request):
-    if request.method == 'GET':
-        post_id = request.GET['post_id']
-        post = Post.objects.get(pk=post_id)
-        like = Like(like_post=post, like_user=request.user)
-        like.save()
-
-        return HttpResponseRedirect('/ourblog/post/' + post_id)
-
-    else:
-        return HttpResponse("Request method is not a GET")
-
-
-#####################################################
-
-def logout_view(request):
-    logout(request)
-    return redirect(request.META['HTTP_REFERER'])
-
-
-#####################################################
-
-def is_supped(request,cat_id):
-    try:
-        CategorySubscribtion.objects.get(subscribed_user=request.user,
-                                         subscribed_category=Category.objects.get(id=cat_id))
-        return True
-    except:
-        return False
 
 #####################################################
 
@@ -302,3 +208,35 @@ def search_view(request,searchengine):
 
 # def error_404(request):
 #     return render(request, "error404.html")
+
+#####################################################
+
+def is_supped(request,cat_id):
+    try:
+        CategorySubscribtion.objects.get(subscribed_user=request.user,
+                                         subscribed_category=Category.objects.get(id=cat_id))
+        return True
+    except:
+        return False
+
+
+#####################################################
+
+def is_liked(request, post_id):
+    try:
+        Like.objects.get(like_user=request.user, like_post=Post.objects.get(id=post_id))
+        return True
+    except:
+        return False
+
+#####################################################
+
+def is_disliked(request, post_id):
+    try:
+        Dislike.objects.get(dislike_user=request.user,
+                                         dislike_post=Post.objects.get(id=post_id))
+        return True
+    except:
+        return False
+
+#####################################################
