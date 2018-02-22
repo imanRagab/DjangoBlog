@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+{% extends "admin/base.html" %}
+<html lang="en">
+<head>
+
+</head>
+<body>
+
+{% block content %}
+
+<table class="table table-sm table-"><thead>
+	
+<th>Title</th>
+<th>Content</th>
+<th>Category</th>
+<th>Created at</th>
+<th>Update</th>
+<th>Delete</th>
+</thead>
+	<tbody>
+{% for all_posts in allposts %}
+<tr>
+<!-- <a href="/ourblog/admin/{{obj.post_id}}">{{obj.title}}</a> -->
+<td>{{all_posts.post_title}}<br/></td>
+<td>{{all_posts.post_content}}<br/></td>
+<td>{{all_posts.post_category}}<br/></td>
+<td>{{all_posts.post_created_at}}<br/></td>
+
+<td><a href="/ourblog/admin/post_update/{{ all_posts.id }}/">Update</a></td>
+<td><a href="/ourblog/admin/post_delete/{{ all_posts.id }}/">Delete</a></td>
+
+
+</tr>
+{% endfor%}
+</tbody>
+</table>
+{% endblock %}
+
+
+
+</body>
+</html>

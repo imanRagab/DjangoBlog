@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+{% extends "admin/base.html" %}
+
+<html lang="en">
+<head>
+
+</head>
+<body>
+
+<h1>title</h1>
+{% block content %}
+
+<table class="table table-sm table-">
+<thead>
+	
+<th>Name</th>
+<th>Update</th>
+<th>Delete</th>
+</thead>
+</thead>
+<tbody>
+{% for all_category in allcategory %}
+<tr>
+<td>
+
+<a href="/ourblog/admin/{{obj.post_id}}"></a>
+{{all_category.category_name}} 
+
+</td>
+
+<td><a href="/ourblog/admin/category_update/{{ all_category.id }}">Update</a></td>
+<td><a href="/ourblog/admin/category_delete/{{ all_category.id }}">Delete</a><br><br></td>
+</tr>
+{% endfor%}
+
+
+</tbody>
+
+</table>
+
+{% endblock %}
+</body>
+</html>

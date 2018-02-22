@@ -1,0 +1,13 @@
+<!DOCTYPE HTML>
+{% extends "admin/base.html" %}
+
+<html>
+<body>
+{% block content %}
+<form method='POST' action='/ourblog/admin/category_create/'>{% csrf_token%}
+{{form.as_p}}
+    <button type="submit">Add</button>
+</form>
+{% endblock %}
+</body>
+</html>

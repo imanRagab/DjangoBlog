@@ -1,0 +1,12 @@
+<!DOCTYPE HTML>
+{% extends "admin/base.html" %}
+<html>
+<body>
+{% block content %}
+<form method='POST' action='/ourblog/admin/post_create/' enctype="multipart/form-data">{% csrf_token%}
+{{form.as_p}}
+    <input type="submit" value="Add"/>
+</form>
+{% endblock %}
+</body>
+</html>

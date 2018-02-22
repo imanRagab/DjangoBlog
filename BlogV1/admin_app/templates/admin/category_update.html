@@ -1,0 +1,13 @@
+<!DOCTYPE HTML>
+{% extends "admin/base.html" %}
+
+<html>
+<body>
+{% block content %}
+<form method='POST' action=''>{% csrf_token%}
+{{form.as_p}}
+    <button type="submit">Update</button>
+</form>
+{% endblock %}
+</body>
+</html>
