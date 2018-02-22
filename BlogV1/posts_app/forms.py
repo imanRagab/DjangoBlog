@@ -6,63 +6,21 @@ from django.contrib.auth.models import User
 
 User=get_user_model()
 
-# class UserLoginForm(forms.Form):
-#
-#     class Meta:
-#         model = User
-#         fields = [
-#
-#             'username',
-#             'password'
-#         ]
-#         widgets = {
-#             'username': forms.TextInput(attrs={
-#                 'id': 'username',
-#                 'required': True,
-#                 'placeholder': 'username',
-#                 'class': "form-control"
-#             }),
-#
-#             'password': forms.TextInput(attrs={
-#                 'id': 'password',
-#                 'required': True,
-#                 'placeholder': 'password',
-#                 'class': "form-control"
-#             }),
-#         }
-#
-#     def clean(self, *args,**kwargs):
-#         username=self.cleaned_data.get("username")
-#         password=self.cleaned_data.get("password")
-#
-#         if username and password:
-#             User = authenticate(username=username, password=password)
-#
-#             if not User:
-#                 raise forms.ValidationError("this user not exist")
-#             if not User.check_password(password):
-#                 raise forms.ValidationError("incorrect password")
-#
-#         return super(UserLoginForm , self).clean(*args,**kwargs)
 class UserLoginForm(forms.Form):
-    username = forms.CharField(label='Username', widget=forms.TextInput)
-    password = forms.CharField(label='Password', widget=forms.PasswordInput)
 
-    def clean(self, *args,**kwargs):
-        username=self.cleaned_data.get("username")
-        password=self.cleaned_data.get("password")
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        try:
+            user = User.objects.exclude(pk=self.instance.pk).get(username=username)
+        except User.DoesNotExist:
+            return username
+        raise forms.ValidationError(u'Username "%s" is already in use.' % username)
 
-        if username and password:
-            try:
-                authenticate(username=username, password=password)
-                user = User.objects.get(username=username)
-            except:
-                raise forms.ValidationError("this user not exist")
-
-            if user.password != password:
-                raise forms.ValidationError("incorrect password")
-
-            return super(UserLoginForm,self).clean(*args,**kwargs)
+    def clean_password(self):
+        valid = self.user.check_password(self.cleaned_data['password'])
+        if not valid:
+            raise forms.ValidationError("Password Incorrect")
+        return valid
 
 ##########################################################################
 

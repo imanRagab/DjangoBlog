@@ -87,10 +87,7 @@
 
                 {% endif %}
 
-<!--<<<<<<< HEAD-->
-                <!--{% if user.is_staff %}-->
-<!--=======-->
-                {% if user.is_superuser %}
+                 {% if user.is_superuser %}
 
                     <a class="nav-link" href="/ourblog/admin/dashboard">Admin Panel</a>
 

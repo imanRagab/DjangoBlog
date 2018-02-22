@@ -22,9 +22,7 @@ urlpatterns = [
     url(r'^commentreply/(?P<post_id>[0-9]+)/(?P<comment_id>[0-9]+)', views.comment_reply),
     url(r'^postcomment/(?P<post_id>[0-9]+)/$', views.post_comment),
     url(r'^likepost/$', views.like_post),
-    #url(r'^issuped/(?P<cat_id>[0-9]+)/$', views.is_supped),
-
-
+    #url(r'^issuped/(?P<cat_id>[0-9]+)/$', views.is_supped)
 ]
 
 

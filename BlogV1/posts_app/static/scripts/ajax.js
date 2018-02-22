@@ -57,22 +57,11 @@ $(function(){
                 }
                 });
          }
-
-        $.ajax({
-            url: '/ourblog/likepost',
-            type: 'get',
-            data: {
-                post_id: $(this).attr("postId")
-            },
-            success: function(resp){
-            }
-        });
     });
     ///////////////////////////////////////
-    $("#dislikeBtn").click(function(){
+   $("#dislikeBtn").click(function(){
 
       if($(this).html()== "Dislike" ){
-
        $(this).html("Undislike")
        $("#likeBtn").attr('disabled',true)
         thiss=this
@@ -83,19 +72,24 @@ $(function(){
         data: {
             post_id: $(thiss).attr("postId")
         },
-        success: function(reponse){
-           console.log(reponse)
-                alert("disliked!")
+        success: function(response){
+             alert("disliked!")
+                console.log(response)
+           response=JSON.parse(response)
+           count=response.count
+           if (count == 10){
+                 $("#exampleModal").modal('show');
+           }
+
         },
         error: function (error) {
 
-                alert(error);
                 }
         });
 
  }
 
-else {
+        else {
 
              $(this).html("Dislike")
              $("#likeBtn").attr('disabled',false)
@@ -112,10 +106,10 @@ else {
                             alert("un-disliked!")
                     },
                 error: function (error) {
-                            alert(error);
                             }
                     });
             }
+
     });
 
     $("#loginForm").submit(function(){

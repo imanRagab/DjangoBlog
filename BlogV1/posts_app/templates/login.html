@@ -10,7 +10,15 @@
 
     {% csrf_token %}
 
-    {{form.as_p}}
+    {{error}}<br>
+
+    <b>Username:</b>
+    <input type="text" name="username" required>
+    <br><br>
+
+    <b>Password:</b>
+    <input type="password" name="password" required>
+    <br><br>
 
     <input type="submit" value="Login">
 

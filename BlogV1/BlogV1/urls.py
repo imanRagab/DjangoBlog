@@ -25,7 +25,6 @@ from django.conf.urls.static import static
 urlpatterns = [
     url(r'^admin/', include('admin_app.urls')),
     url(r'^ourblog/', include('posts_app.urls')),
-<<<<<<< HEAD
     url(r'^ourblog/admin/', include('admin_app.urls')),
 ]
 
@@ -34,9 +33,3 @@ handler404 = 'posts_app.views.error_404'
 if settings.DEBUG :
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-=======
-]
-if settings.DEBUG :
-        urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-        urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
->>>>>>> 3fe577ca46560f783ad0f76a59a5c9845f315f68

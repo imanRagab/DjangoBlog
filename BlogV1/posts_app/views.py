@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from models import Post, Category, Comment, Tag, Reply, Like, Dislike, Forbidden, CategorySubscribtion
 from forms import ReplyForm, CommentForm, UserLoginForm
 import csv
+import json
 ####################################################################
 def post(request, post_id):
 
@@ -17,6 +18,24 @@ def post(request, post_id):
     reply_form = ReplyForm()
     try:
         post = Post.objects.get(id=post_id)
+
+        dislike_state = None
+        like_state = None
+
+        try:
+            Like.objects.get(like_user=request.user, like_post=post)
+            like_state = True
+        except:
+            like_state = False
+
+        try:
+            Dislike.objects.get(dislike_user=request.user, dislike_post=post)
+            dislike_state = True
+
+        except:
+            dislike_state = False
+
+
         tags = Tag.objects.filter(tag_posts__id=post_id)
         categories = Category.objects.all()
         if post:
@@ -48,7 +67,8 @@ def post(request, post_id):
                        'reply_form': reply_form,
                        'likes': likes,
                        'dislikes': dislikes,
-                       'tags': tags, }
+                       'tags': tags, 'like_state' : like_state,
+               'dislike_state': dislike_state,}
 
     except Post.DoesNotExist:
         raise Http404("Post does not exist")
@@ -74,13 +94,10 @@ def register_view(request):
     return render(request, 'register.html', context)
 ####################################################
 def login_view(request):
-
-    form = UserLoginForm(request.POST or None)
-    context = {'form': form}
-    if form.is_valid():
-        username=form.cleaned_data.get("username")
-        password = form.cleaned_data.get("password")
-        user=authenticate(username=username , password=password)
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
         if user is not None:
             if user.is_active:
                 login(request, user)
@@ -89,33 +106,11 @@ def login_view(request):
                 return HttpResponse("Your account has been blocked please contact the admin")
 
         else:
+            context = {'error': "login data is not correct"}
             return render(request, 'login.html', context)
 
-    else:
-        return render(request, 'login.html', context)
-
-    return render(request, 'login.html', context)
-
-
-#def login_view(request):
-#   if request.method == 'POST':
-#      username = request.POST['username']
-#        password = request.POST['password']
-#        user = authenticate(username=username, password=password)
-#        if user is not None:
-#            if user.is_active:
-#                login(request, user)
-#                return render(request, 'home.html')
-#           else:
-#               return HttpResponse("Your account has been blocked please contact the admin")
-#
-#        else:
-#            return render(request, 'login.html')
-
-#   return render(request, 'login.html')
-
+    return render(request, 'login.html')
 #####################################################
-
 @login_required
 def logged_in_only(request):
     return HttpResponse("you are authenticated")
@@ -130,6 +125,15 @@ def logged_in_only(request):
 
 #####################################################
 
+# def home(request):
+#     categories = Category.objects.all()
+#     retCats = []
+#     for cat in categories:
+#         retCats.append({"state": is_supped(request, cat.id), "cat": cat})
+#     posts_all = Post.objects.all()
+#     context = {'categories': retCats, 'posts_all': posts_all, 'Like': Like, 'Dislike': Dislike}
+#
+#     return render(request, 'home.html', context)
 def home(request):
     categories = Category.objects.all()
     retCats = []
@@ -140,8 +144,27 @@ def home(request):
 
     return render(request, 'home.html', context)
 
-
 #####################################################
+
+# def category(request, cat_id):
+#     categories = Category.objects.all()
+#     category = Category.objects.get(id=cat_id)
+#     retCats = []
+#     for cat in categories:
+#         retCats.append({"state": is_supped(request, cat.id), "cat": cat})
+#
+#     cat_posts = Post.objects.filter(post_category__id=cat_id)
+#     paginator = Paginator(cat_posts, 2)  # Show 25 contacts per page
+#     if request.GET.get('page'):
+#         page = request.GET.get('page')
+#     else:
+#         page = 1
+#     page_posts = paginator.page(page)
+#
+#     # cat_post = map(lambda x : x, cat_posts)
+#     context = {'category': category, 'categories': retCats, 'page_posts': page_posts}
+#
+#     return render(request, 'category.html', context)
 
 def category(request, cat_id):
     categories = Category.objects.all()
@@ -165,8 +188,6 @@ def category(request, cat_id):
     context = {'category': category, 'categories': retCats, 'page_posts': page_posts}
 
     return render(request, 'category.html', context)
-
-
 #####################################################
 
 def comment_reply(request, post_id, comment_id):
@@ -274,9 +295,25 @@ def dislike_view(request,post_id):
     Dislike.objects.create(dislike_user=request.user,dislike_post=pid)
     count = Dislike.objects.all().count()
     print count
-    if count == 10:
-        Post.objects.get(id=post_id).delete()
-    return JsonResponse({"state": True, "safe": False})
+    # if count == 10:
+    #     Post.objects.get(id=post_id).delete()
+        #return HttpResponseRedirect('/ourblog/home/')
+    data = json.dumps({'count': count, 'state': True})
+    return JsonResponse(data, safe=False)
+
+
+
+
+
+def delete_view(request,post_id):
+    Post.objects.get(id=post_id).delete()
+    return HttpResponseRedirect('/ourblog/home')
+
+
+
+
+
+
 #####################################################
 def undislike_view(request,post_id):
     pid=Post.objects.get(id=post_id)
